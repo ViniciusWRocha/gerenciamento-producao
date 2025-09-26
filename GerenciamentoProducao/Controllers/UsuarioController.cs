@@ -35,7 +35,7 @@ public class UsuarioController : Controller
         var vm = await CriarUsuarioViewModel();
         return View(vm);
     }
-
+    // POST: Usuario/Create
     public async Task<IActionResult> Create(UsuarioViewModel viewModel)
     {
         if (!ModelState.IsValid)
