@@ -19,8 +19,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-//Ryan macaco
-//ryan lindo
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
