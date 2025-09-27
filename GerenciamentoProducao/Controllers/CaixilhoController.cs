@@ -60,22 +60,30 @@ namespace GerenciamentoProducaoo.Controllers
 
 
 
-        public IActionResult Index(int? obraId, string? search)
-        {
-            // Fazer filtro por nome da obra, familia de caixilho e tipo de caixilho
+        //public IActionResult Index()//int? obraId, string? search
+        //{
+        //    // Fazer filtro por nome da obra, familia de caixilho e tipo de caixilho
 
-            //var caixilhos = _caixilhoRepository.GetAllAsync();
-            //if(obraId.HasValue && obraId.Value > 0)
-            //{
-            //    caixilhos = caixilhos.
-            //}
-            return View();
+        //    //var caixilhos = _caixilhoRepository.GetAllAsync();
+        //    //if(obraId.HasValue && obraId.Value > 0)
+        //    //{
+        //    //    caixilhos = caixilhos.
+        //    //}
+        //    return View();
+        //}
+        public async Task<IActionResult> Index()
+        {
+            var caixilhos = await _caixilhoRepository.GetAllAsync();
+            return View(caixilhos);
         }
+
         public async Task<IActionResult> Create()
         {
             var model = await CriarCaixilhoViewModel();
             return View(model);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CaixilhoViewModel caixilhoViewModel)
         {
             if (ModelState.IsValid)
@@ -174,7 +182,7 @@ namespace GerenciamentoProducaoo.Controllers
             return View(item);
         }
 
-        //[HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
