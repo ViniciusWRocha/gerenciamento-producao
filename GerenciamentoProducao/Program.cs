@@ -12,6 +12,7 @@ builder.Services.AddDbContext<GerenciamentoProdDbContext>(options =>
 //builder.Services.AddScoped<IFilmeRepository, FilmeRepository>();
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IFamiliaCaixilhoRepository, FamiliaCaixilhoRepository>(); 
 
 //builder.Services.AddScoped<ICaixilhoRepository, Caixi>
 // Add services to the container.

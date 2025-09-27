@@ -9,5 +9,6 @@ namespace GerenciamentoProducao.Interfaces
          Task AddAsync(FamiliaCaixilho familiaCaixilho);
          Task UpdateAsync(FamiliaCaixilho familiaCaixilho);
          Task DeleteAsync(int id);
+        Task<string?> GetByIdAsync(int id);
     }
 }
