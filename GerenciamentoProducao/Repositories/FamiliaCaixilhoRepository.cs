@@ -33,7 +33,7 @@ namespace GerenciamentoProducao.Repositories
             return await _context.FamCaixilhos.ToListAsync();
         }
 
-        public async Task<FamiliaCaixilho> GetById(int id)
+        public async Task<FamiliaCaixilho> GetByIdAsync(int id)
         {
             return await _context.FamCaixilhos.FindAsync(id);
 
