@@ -30,7 +30,7 @@ namespace GerenciamentoProducao.Repositories
 
         public async Task<List<Producao>> GetAllAsync()
         {
-            return await _context.Producoes.ToListAsync();
+            return await _context.Producoes.Include(p => p.Usuario).Include(p => p.FamiliaCaixilho).ToListAsync();
 
         }
 

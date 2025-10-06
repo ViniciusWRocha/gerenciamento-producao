@@ -19,7 +19,22 @@ builder.Services.AddScoped<IFamiliaCaixilhoRepository, FamiliaCaixilhoRepository
 builder.Services.AddScoped<IObraRepository, ObraRepository>();
 builder.Services.AddScoped<IProducaoRepository, ProducaoRepository>();
 
-//builder.Services.AddScoped<ICaixilhoRepository, Caixi>
+
+// ======================================================
+// Autenticação com COOKIES
+// ======================================================
+builder.Services.AddAuthentication("GerenciadorProd")
+    .AddCookie("GerenciadorProd", options =>
+    {
+        options.LoginPath = "/Usuario/Login";             
+        options.AccessDeniedPath = "/Usuario/AcessoNegado"; 
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
+        options.SlidingExpiration = true;                  
+    }); 
+
+
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -34,7 +49,9 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 
