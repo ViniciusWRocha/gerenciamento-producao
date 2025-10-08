@@ -1,6 +1,7 @@
 ﻿using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Models;
 using GerenciamentoProducao.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GerenciamentoProducaoo.Controllers
@@ -19,12 +20,14 @@ namespace GerenciamentoProducaoo.Controllers
             var lista = await _obraRepository.GetAllAsync();
             return View(lista);
         }
-        [HttpGet]
 
+
+        [HttpGet]
+        [Authorize(Roles = "Administrador,Gerente")]
         public IActionResult Create() => View();
-        //[Authorize(Roles = "Admin")]
+        
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Obra obra)
         {
             if (ModelState.IsValid)
@@ -34,7 +37,9 @@ namespace GerenciamentoProducaoo.Controllers
             }
             return View(obra);
         }
-        //[Authorize(Roles = "Admin")]
+
+
+        [Authorize(Roles = "Administrador,Gerente")]
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -42,10 +47,11 @@ namespace GerenciamentoProducaoo.Controllers
             if (obra == null) return NotFound();
             return View(obra);
         }
-        //[Authorize(Roles = "Admin")]
 
+
+        
         [HttpPut]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Obra obra)
         {
             if (id != obra.IdObra)
@@ -59,18 +65,20 @@ namespace GerenciamentoProducaoo.Controllers
             }
             return View(obra);
         }
-        //[Authorize(Roles = "Admin")]
 
+
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id)
         {
             var item = await _obraRepository.GetById(id);
             if (item == null) return NotFound();
             return View(item);
         }
-        //[Authorize(Roles = "Admin")]
+        
 
+        [Authorize(Roles = "Administrador,Gerente")]
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _obraRepository.DeleteAsync(id);

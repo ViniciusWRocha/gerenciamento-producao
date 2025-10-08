@@ -61,13 +61,15 @@ namespace GerenciamentoProducaoo.Controllers
             return View(caixilhos);
         }
 
+
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Create()
         {
             var model = await CriarCaixilhoViewModel();
             return View(model);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CaixilhoViewModel caixilhoViewModel)
         {
             if (!ModelState.IsValid)
@@ -91,6 +93,7 @@ namespace GerenciamentoProducaoo.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Edit(int id)
         {
             var caixilho = await _caixilhoRepository.GetById(id);
@@ -158,7 +161,8 @@ namespace GerenciamentoProducaoo.Controllers
             return View(viewModel);
         }
 
-        //[Authorize(Roles = "Admin")]
+
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id)
         {
             var item = await _caixilhoRepository.GetById(id);
@@ -166,8 +170,9 @@ namespace GerenciamentoProducaoo.Controllers
             return View(item);
         }
 
+        [Authorize(Roles = "Administrador,Gerente")]
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _caixilhoRepository.DeleteAsync(id);

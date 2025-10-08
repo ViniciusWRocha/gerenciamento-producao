@@ -24,6 +24,7 @@ namespace GerenciamentoProducao.Models
         [Required(ErrorMessage = "Campo Obrigatório")]
         public bool Ativo { get; set; } = true;
 
+        [ForeignKey("TipoUsuario")]
         public int IdTipoUsuario { get; set; }
         public virtual TipoUsuario? TipoUsuario { get; set; }
 

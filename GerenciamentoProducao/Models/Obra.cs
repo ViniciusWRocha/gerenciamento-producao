@@ -44,7 +44,7 @@ namespace GerenciamentoProducao.Models
 
         //lista de caixilhos
         //public List<Caixilho> Caixilhos { get; set; }
-
+        [ForeignKey("Usuario")]
         public int IdUsuario { get; set; }
         public virtual Usuario? Usuario{ get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Models;
 using GerenciamentoProducao.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GerenciamentoProducao.Controllers
@@ -21,6 +22,7 @@ namespace GerenciamentoProducao.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrador,Gerente")]
         public IActionResult Create() => View();
         [HttpPost]
         public async Task<IActionResult> Create(TipoUsuario tipoUsuario)
@@ -32,7 +34,8 @@ namespace GerenciamentoProducao.Controllers
             }
             return View(tipoUsuario);
         }
-
+        [HttpGet]
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Edit(int id)
         {
             var tipoUsuario = await _tipoUsuarioRepository.GetById(id);
@@ -57,7 +60,7 @@ namespace GerenciamentoProducao.Controllers
         }
 
         //[HttpGet]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id)
         {
             var item = await _tipoUsuarioRepository.GetById(id);

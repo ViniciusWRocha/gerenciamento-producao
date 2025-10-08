@@ -11,5 +11,7 @@ namespace GerenciamentoProducao.Models
         [Required(ErrorMessage = "Campo Obrigatório")]
         [StringLength(100)]
         public string NomeTipoUsuario { get; set; }
+
+        public List<Usuario> Usuarios { get; set; } = new List<Usuario>();
     }
 }

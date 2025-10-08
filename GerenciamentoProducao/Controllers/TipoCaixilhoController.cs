@@ -18,10 +18,13 @@ namespace GerenciamentoProducaoo.Controllers
             var lista = await _tipoCaixilhoRepository.GetAllAsync();
             return View(lista);
         }
+
+
         [HttpGet]
+        [Authorize(Roles = "Administrador,Gerente")]
         public IActionResult Create() => View();
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TipoCaixilho tipoCaixilho)
         {
             if (ModelState.IsValid)
@@ -31,7 +34,9 @@ namespace GerenciamentoProducaoo.Controllers
             }
             return View(tipoCaixilho);
         }
-        //[HttpPut]
+
+        [HttpGet]
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Edit(int id)
         {
             var tipoCaixilho = await _tipoCaixilhoRepository.GetById(id);
@@ -39,8 +44,8 @@ namespace GerenciamentoProducaoo.Controllers
             return View(tipoCaixilho);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPut]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TipoCaixilho tipoCaixilho)
         {
             if (id != tipoCaixilho.IdTipoCaixilho)
@@ -54,7 +59,9 @@ namespace GerenciamentoProducaoo.Controllers
             }
             return View(tipoCaixilho);
         }
-        //[Authorize(Roles = "Admin
+
+
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id) { 
             var item = await _tipoCaixilhoRepository.GetById(id);
             if (item == null) return NotFound();

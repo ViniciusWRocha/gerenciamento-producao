@@ -25,11 +25,14 @@ namespace GerenciamentoProducao.Models
 
         public bool EhLiberado { get; set; }
 
+
+        [ForeignKey("Usuario")]
         public int IdUsuario { get; set; }
         public virtual Usuario? Usuario { get; set; }
 
-        public int FamiliaCaixilhoId { get; set; }
 
+        [ForeignKey("FamiliaCaixilho")]
+        public int FamiliaCaixilhoId { get; set; }
         public virtual FamiliaCaixilho? FamiliaCaixilho { get; set; }
     }
 }
