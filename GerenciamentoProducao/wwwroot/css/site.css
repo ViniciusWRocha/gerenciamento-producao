@@ -41,7 +41,7 @@ body {
     width: 100%;
     position: fixed;
     left: 0;
-    z-index:-1;
+
     height: 100%;
     background: #101011;
     display: flex;

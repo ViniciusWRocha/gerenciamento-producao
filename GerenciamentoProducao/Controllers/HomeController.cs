@@ -15,6 +15,10 @@ namespace GerenciamentoProducao.Controllers
 
         public IActionResult Index()
         {
+            if(!User?.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
             return View();
         }
 
