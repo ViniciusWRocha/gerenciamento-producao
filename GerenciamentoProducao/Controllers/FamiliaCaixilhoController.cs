@@ -2,6 +2,7 @@
 using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Models;
 using GerenciamentoProducao.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GerenciamentoProducao.Controllers
@@ -20,12 +21,16 @@ namespace GerenciamentoProducao.Controllers
             var lista = await _familiaCaixilhoRepository.GetAllAsync();
             return View(lista);
         }
+
+
+        [Authorize(Roles = "Administrador,Gerente")]
         public IActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FamiliaCaixilho familia)
         {
             if (ModelState.IsValid)
@@ -35,6 +40,8 @@ namespace GerenciamentoProducao.Controllers
             }
             return View(familia);
         }
+
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<ActionResult> Edit(int id)
         {
             var familia = await _familiaCaixilhoRepository.GetByIdAsync(id);
@@ -45,7 +52,7 @@ namespace GerenciamentoProducao.Controllers
             return View(familia);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, FamiliaCaixilho familia)
         {
             if (id != familia.IdFamiliaCaixilho)
@@ -60,6 +67,8 @@ namespace GerenciamentoProducao.Controllers
             }
             return View(familia);
         }
+
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id)
         {
             
@@ -68,7 +77,7 @@ namespace GerenciamentoProducao.Controllers
             return View(item);
         }
 
-
+        [Authorize(Roles = "Administrador,Gerente")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

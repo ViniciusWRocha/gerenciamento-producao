@@ -4,6 +4,7 @@ using GerenciamentoProducao.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GerenciamentoProducaoo.Migrations
 {
     [DbContext(typeof(GerenciamentoProdDbContext))]
-    partial class GerenciamentoProdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251007232409_CorrigindoChaveEstrangeiraUsuario")]
+    partial class CorrigindoChaveEstrangeiraUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +34,9 @@ namespace GerenciamentoProducaoo.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCaixilho"));
 
                     b.Property<int>("Altura")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FamiliaCaixilhoIdFamiliaCaixilho")
                         .HasColumnType("int");
 
                     b.Property<int>("IdFamiliaCaixilho")
@@ -56,13 +62,16 @@ namespace GerenciamentoProducaoo.Migrations
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TipoCaixilhoIdTipoCaixilho")
+                        .HasColumnType("int");
+
                     b.HasKey("IdCaixilho");
 
-                    b.HasIndex("IdFamiliaCaixilho");
-
-                    b.HasIndex("IdTipoCaixilho");
+                    b.HasIndex("FamiliaCaixilhoIdFamiliaCaixilho");
 
                     b.HasIndex("ObraId");
+
+                    b.HasIndex("TipoCaixilhoIdTipoCaixilho");
 
                     b.ToTable("Caixilho");
                 });
@@ -139,9 +148,12 @@ namespace GerenciamentoProducaoo.Migrations
                         .HasMaxLength(2)
                         .HasColumnType("nvarchar(2)");
 
+                    b.Property<int?>("UsuarioIdUsuario")
+                        .HasColumnType("int");
+
                     b.HasKey("IdObra");
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("UsuarioIdUsuario");
 
                     b.ToTable("Obra");
                 });
@@ -178,11 +190,14 @@ namespace GerenciamentoProducaoo.Migrations
                     b.Property<bool>("Produzido")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("UsuarioIdUsuario")
+                        .HasColumnType("int");
+
                     b.HasKey("IdProducao");
 
                     b.HasIndex("FamiliaCaixilhoId");
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("UsuarioIdUsuario");
 
                     b.ToTable("Producao");
                 });
@@ -268,21 +283,17 @@ namespace GerenciamentoProducaoo.Migrations
                 {
                     b.HasOne("GerenciamentoProducao.Models.FamiliaCaixilho", "FamiliaCaixilho")
                         .WithMany()
-                        .HasForeignKey("IdFamiliaCaixilho")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GerenciamentoProducao.Models.TipoCaixilho", "TipoCaixilho")
-                        .WithMany()
-                        .HasForeignKey("IdTipoCaixilho")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FamiliaCaixilhoIdFamiliaCaixilho");
 
                     b.HasOne("GerenciamentoProducao.Models.Obra", "Obra")
                         .WithMany()
                         .HasForeignKey("ObraId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("GerenciamentoProducao.Models.TipoCaixilho", "TipoCaixilho")
+                        .WithMany()
+                        .HasForeignKey("TipoCaixilhoIdTipoCaixilho");
 
                     b.Navigation("FamiliaCaixilho");
 
@@ -295,9 +306,7 @@ namespace GerenciamentoProducaoo.Migrations
                 {
                     b.HasOne("GerenciamentoProducao.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioIdUsuario");
 
                     b.Navigation("Usuario");
                 });
@@ -312,9 +321,7 @@ namespace GerenciamentoProducaoo.Migrations
 
                     b.HasOne("GerenciamentoProducao.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioIdUsuario");
 
                     b.Navigation("FamiliaCaixilho");
 

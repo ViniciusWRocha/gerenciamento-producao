@@ -74,12 +74,20 @@ namespace GerenciamentoProducao.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Usuario?> ValidarLoginAsync(string email, string senha)
+        //public async Task<Usuario?> ValidarLoginAsync(string email, string senha)
+        //{
+        //    return await _context.Usuarios
+        //        .Include(u => u.TipoUsuario)
+        //        .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
+        //}
+
+        public async Task<Usuario> ValidarLoginAsync(string email, string senha)
         {
             return await _context.Usuarios
-                .Include(u => u.TipoUsuario)
+                .Include(u => u.TipoUsuario) // Isso garante que o TipoUsuario será carregado
                 .FirstOrDefaultAsync(u => u.Email == email && u.Senha == senha);
         }
+
 
 
 

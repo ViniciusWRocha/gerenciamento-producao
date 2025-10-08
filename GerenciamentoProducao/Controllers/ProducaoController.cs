@@ -2,6 +2,7 @@
 using GerenciamentoProducao.Models;
 using GerenciamentoProducao.Repositories;
 using GerenciamentoProducaoo.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -53,6 +54,7 @@ namespace GerenciamentoProducaoo.Controllers
         }
 
         // Criar nova produção (GET)
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Create()
         {
             var model = await CriarProducaoViewModel();
@@ -87,6 +89,7 @@ namespace GerenciamentoProducaoo.Controllers
         }
 
         // Editar produção (GET)
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Edit(int id)
         {
             var producao = await _producaoRepository.GetByIdAsync(id);
@@ -136,6 +139,7 @@ namespace GerenciamentoProducaoo.Controllers
         }
 
         // Excluir produção (GET - confirmação)
+        [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id)
         {
             var producao = await _producaoRepository.GetByIdAsync(id);
@@ -146,7 +150,8 @@ namespace GerenciamentoProducaoo.Controllers
 
         // Excluir produção (POST - confirmado)
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador,Gerente")]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmado(int id)
         {
             await _producaoRepository.DeleteAsync(id);

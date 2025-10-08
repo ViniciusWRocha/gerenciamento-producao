@@ -25,12 +25,15 @@ namespace GerenciamentoProducao.Models
         public float PesoUnitario { get; set; }
 
 
+        [ForeignKey("Obra")]
         public int ObraId { get; set; }
         public virtual Obra? Obra{ get; set; }
 
+        [ForeignKey("FamiliaCaixilho")]
         public int IdFamiliaCaixilho { get; set; }
         public virtual FamiliaCaixilho? FamiliaCaixilho { get; set; }
 
+        [ForeignKey("TipoCaixilho")]
         public int IdTipoCaixilho { get; set; }
         public virtual TipoCaixilho? TipoCaixilho{ get; set; }
 
