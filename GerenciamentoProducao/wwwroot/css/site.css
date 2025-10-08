@@ -1,7 +1,9 @@
 html {
   font-size: 14px;
 }
-
+*{
+    margin: 0;
+}
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -17,9 +19,10 @@ html {
   min-height: 100%;
 }
 
+/*
 body {
   margin-bottom: 60px;
-}
+}*/
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
@@ -28,4 +31,199 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+.main{
+    height:100dvh;
+ 
+
+}
+.container-center {
+    width: 100%;
+    position: fixed;
+    left: 0;
+    z-index:-1;
+    height: 100%;
+    background: #101011;
+    display: flex;
+    background: linear-gradient(90deg, rgba(16, 16, 17, 1) 0%, rgba(23, 44, 84, 1) 100%);
+}
+.left {
+
+    font-family: "Google Sans Code", monospace;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+    .login-box h1 {
+        margin: 0 0 30px;
+        padding: 0;
+        color: white;
+        text-align: center;
+    }
+
+    .login-box .user-box {
+        position: relative;
+    }
+
+        .login-box .user-box input {
+            width: 30rem;
+            padding: 10px 0;
+            font-size: 16px;
+            color: white;
+            margin-bottom: 30px;
+            border: none;
+            border-bottom: 1px solid white;
+
+            outline: none;
+            background: transparent;
+        }
+
+        .login-box .user-box label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px 0;
+            font-size: 1.2rem;
+            color: #fff;
+            pointer-events: none;
+            transition: .5s;
+        }
+
+        .login-box .user-box input:focus ~ label,
+        .login-box .user-box input:not(:placeholder-shown) ~ label {
+            top: -20px;
+            left: 0;
+/*            color: white;*/
+            font-size: 12px;
+        }
+
+    .login-box form a {
+        position: relative;
+        display: inline-block;
+        padding: 10px 20px;
+/*        color: #03e9f4;*/
+        font-size: 16px;
+        text-decoration: none;
+        text-transform: uppercase;
+        overflow: hidden;
+        transition: .2s;
+        margin-top: 40px;
+        letter-spacing: 4px;
+    }
+    .enter {
+    width: 100%;
+    background: blue;
+    outline: none;
+    color: white;
+    border: none;
+    height: 3rem;
+    border-radius:15px;
+    }
+.right {
+/*    position: relative;*/
+    height: 100%;
+    width: 30%;
+    background: red;
+    z-index:0;
+    img{
+           width: 100%;
+           height:100%;
+       }
+   
+}
+
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: #212529; /* bg-dark */
+    color: #f8f9fa; /* text-light */
+    padding: 1rem;
+    transition: all 0.3s ease;
+/*    z-index: 1000;*/
+    overflow-y: auto;
+}
+
+    /* Quando estiver fechada */
+    #sidebar.collapsed {
+        width: 60px;
+    }
+
+    /* Links da nav */
+    #sidebar .nav-link {
+        color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.2s;
+    }
+
+        #sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+/* Ícone para abrir/fechar */
+#toggle-sidebar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    color: #f8f9fa;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    color:grey;
+    cursor: pointer;
+    width: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+    #toggle-sidebar:hover {
+        background: #343a40;
+        
+    }
+
+/* Ícone gira quando fecha */
+#sidebar.collapsed #toggle-sidebar i {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+/* Ajuste no conteúdo principal */
+.main {
+    margin-left: 5%;
+/*    margin-top:15%;*/
+    transition: margin-left 0.3s ease;
+/*    padding: 20px;*/
+}
+
+#sidebar.collapsed ~ .main {
+    margin-left: 60px;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+}
+#navTop{
+    display: none
+}
+@media (max-width: 1024px) {
+    #sidebar {
+        display: none;
+    }
+    #navTop{
+        display: initial;
+    }
+}
+.row{
+    width:90%;
 }

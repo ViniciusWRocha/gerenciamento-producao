@@ -28,7 +28,7 @@ public class UsuarioController : Controller
 
     [HttpGet]
     [AllowAnonymous]
-    public IActionResult Login2(string? returnUrl)
+    public IActionResult Login(string? returnUrl)
     {
         if (User?.Identity?.IsAuthenticated == true)
         {
