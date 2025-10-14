@@ -126,7 +126,7 @@ body {
 .right {
 /*    position: relative;*/
     height: 100%;
-    width: 30%;
+    width: 50%;
     background: red;
     z-index:0;
     img{
@@ -135,95 +135,129 @@ body {
        }
    
 }
+@media (max-width: 768px) {
+    .right {
+        /*    position: relative;*/
 
+        background: red;
+        z-index: 0;
+        display:none;
 
-#sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 250px;
-    background-color: #212529; /* bg-dark */
-    color: #f8f9fa; /* text-light */
-    padding: 1rem;
-    transition: all 0.3s ease;
-/*    z-index: 1000;*/
-    overflow-y: auto;
 }
-
-    /* Quando estiver fechada */
-    #sidebar.collapsed {
-        width: 60px;
+}
+.main {
+    margin-left: 15%;
+    /*    margin-top:15%;*/
+    transition: margin-left 0.3s ease;
+    /*    padding: 20px;*/
+}
+@media (max-width: 1024px) {
+    .main {
+        margin-left: 0%;
+        /*    margin-top:15%;*/
+        margin-top:10%;
+/*        transition: margin-left 0.3s ease;*/
+        /*    padding: 20px;*/
     }
 
-    /* Links da nav */
-    #sidebar .nav-link {
+
+}
+    
+    
+    @media (max-width: 500px) {
+    .login-box .user-box input {
+        width: 110%;
+    }
+
+    .enter {
+        width: 110%;
+    }
+}
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 250px;
+        background-color: #212529; /* bg-dark */
+        color: #f8f9fa; /* text-light */
+        padding: 1rem;
+        transition: all 0.3s ease;
+        /*    z-index: 1000;*/
+        overflow-y: auto;
+    }
+
+        /* Quando estiver fechada */
+        #sidebar.collapsed {
+            width: 60px;
+        }
+
+        /* Links da nav */
+        #sidebar .nav-link {
+            color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+
+            #sidebar .nav-link:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+    /* Ícone para abrir/fechar */
+    #toggle-sidebar {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
         color: #f8f9fa;
-        padding: 10px;
-        border-radius: 5px;
+        border: none;
+        border-radius: 0 4px 4px 0;
+        color: grey;
+        cursor: pointer;
+        width: 20px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         transition: background 0.2s;
     }
 
-        #sidebar .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+        #toggle-sidebar:hover {
+            background: #343a40;
         }
 
-/* Ícone para abrir/fechar */
-#toggle-sidebar {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    color: #f8f9fa;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    color:grey;
-    cursor: pointer;
-    width: 20px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-}
-
-    #toggle-sidebar:hover {
-        background: #343a40;
-        
+    /* Ícone gira quando fecha */
+    #sidebar.collapsed #toggle-sidebar i {
+        transform: rotate(180deg);
+        transition: transform 0.3s ease;
     }
 
-/* Ícone gira quando fecha */
-#sidebar.collapsed #toggle-sidebar i {
-    transform: rotate(180deg);
-    transition: transform 0.3s ease;
-}
+    /* Ajuste no conteúdo principal */
 
-/* Ajuste no conteúdo principal */
-.main {
-    margin-left: 5%;
-/*    margin-top:15%;*/
-    transition: margin-left 0.3s ease;
-/*    padding: 20px;*/
-}
 
-#sidebar.collapsed ~ .main {
-    margin-left: 60px;
-}
-
-.material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
-}
-#navTop{
-    display: none
-}
-@media (max-width: 1024px) {
-    #sidebar {
-        display: none;
+    #sidebar.collapsed ~ .main {
+        margin-left: 60px;
     }
-    #navTop{
-        display: initial;
+
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
     }
-}
-.row{
-    width:90%;
-}
+
+    #navTop {
+        display: none
+    }
+
+    @media (max-width: 1024px) {
+        #sidebar {
+            display: none;
+        }
+
+        #navTop {
+            display: initial;
+        }
+    }
+
+    .row {
+        width: 90%;
+    }

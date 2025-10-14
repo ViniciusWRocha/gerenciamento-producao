@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GerenciamentoProducao.Interfaces;
+using GerenciamentoProducao.API.DTOs;
 
 
 namespace GerenciamentoProducao.API.Controllers
@@ -18,9 +19,35 @@ namespace GerenciamentoProducao.API.Controllers
             _obraRepository = obraRepository;
         }
 
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
+        [HttpGet]
+        public async  Task<IActionResult> GetAllObras()
         {
-            return View();
+            var obras = await _obraRepository.GetAllAsync();
+            var resultado = new List<ObraOutputDTO>();
+            foreach (var obra in obras)
+            {
+                resultado.Add(new ObraOutputDTO
+                {
+                    IdObra = obra.IdObra,
+                    Nome = obra.Nome,
+                    Construtora = obra.Construtora,
+                    Nro = obra.Nro,
+                    Logradouro = obra.Logradouro,
+                    Bairro = obra.Bairro,
+                    Cep= obra.Cep,
+                    Uf= obra.Uf,
+                    Cnpj= obra.Cnpj,
+                    IdUsuario= obra.IdUsuario,
+                    //NomeUsuario= obra.Usuario.NomeUsuario,    
+                });
+            }
+            return Ok(resultado);
         }
+        
+        //public async Task<IActionResult> Get(int )
     }
 }
