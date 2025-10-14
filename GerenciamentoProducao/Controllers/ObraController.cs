@@ -25,7 +25,7 @@ namespace GerenciamentoProducaoo.Controllers
         [HttpGet]
         [Authorize(Roles = "Administrador,Gerente")]
         public IActionResult Create() => View();
-        
+
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Obra obra)

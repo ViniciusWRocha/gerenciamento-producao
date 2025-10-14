@@ -70,7 +70,7 @@
                 @Html.DisplayFor(modelItem => item.Cnpj)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdUsuario)
+                @Html.DisplayFor(modelItem => item.Usuario.NomeUsuario)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdObra">Edit</a> |
