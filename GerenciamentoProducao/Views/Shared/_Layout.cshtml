@@ -61,12 +61,13 @@
 
 		<ul class="nav flex-column gap-2 mt-4" id="navLeft">
 			<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
-			<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">🎬 Usuários</a></li>
-			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">👥 Caixilho</a></li>
-			<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">👥 Tipos de Caixilhos</a></li>
-			<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">👥 Família de Caixilho</a></li>
-			<li><a class="nav-link" asp-controller="Obra" asp-action="Index">👥 Obras</a></li>
-			<li><a class="nav-link" asp-controller="Producao" asp-action="Index">👥 Produções</a></li>
+			<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
+				<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
+			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
+			<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
+			<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
+			<li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
+			<li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
 			@if (User.Identity.IsAuthenticated)
 			{
 				<li class="mt-4">
@@ -78,19 +79,20 @@
 	
 		<nav class="navbar navbar-expand-lg navbar-dark bg-black fixed-top z-0" id="navTop">
 			<div class="container">
-				<a class="navbar-brand" href="#home">🦇 SaphiraTerror</a>
+				<a class="navbar-brand" href="#home" >⚙️ SIGE</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div id="menu" class="collapse navbar-collapse">
 					<ul class="navbar-nav ms-auto">
 						<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
-						<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">🎬 Usuários</a></li>
-						<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">👥 Caixilho</a></li>
-						<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">👥 Tipos de Caixilhos</a></li>
-						<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">👥 Família de Caixilho</a></li>
-						<li><a class="nav-link" asp-controller="Obra" asp-action="Index">👥 Obras</a></li>
-						<li><a class="nav-link" asp-controller="Producao" asp-action="Index">👥 Produções</a></li>
+						<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
+						<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
+						<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
+						<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
+						<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
+						<li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
+						<li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
 						@if (User.Identity.IsAuthenticated)
 						{
 							<li class="mt-4">
