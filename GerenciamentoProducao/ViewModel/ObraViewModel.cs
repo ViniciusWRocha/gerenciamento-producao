@@ -18,7 +18,7 @@ namespace GerenciamentoProducaoo.ViewModel
         public string Uf { get; set; }
         public string Cnpj { get; set; }
         public int IdUsuario { get; set; }
-        public IEnumerable<SelectListItem> Usuario { get; set; }
+        public IEnumerable<SelectListItem>? Usuario { get; set; }
 
     }
 }
