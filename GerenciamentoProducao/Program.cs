@@ -50,7 +50,7 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseRouting();
-
+app.UseHttpMethodOverride();
 app.UseAuthentication();
 app.UseAuthorization();
 
