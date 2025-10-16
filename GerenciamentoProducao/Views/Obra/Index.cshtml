@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<GerenciamentoProducao.Models.Obra>
+@* @model IEnumerable<GerenciamentoProducao.ViewModel.ObraViewModel> *@
 
 @{
     ViewData["Title"] = "Index";
@@ -37,7 +38,7 @@
                 @Html.DisplayNameFor(model => model.Cnpj)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdUsuario)
+                @Html.DisplayNameFor(model => model.Usuario)
             </th>
             <th></th>
         </tr>
@@ -70,7 +71,7 @@
                 @Html.DisplayFor(modelItem => item.Cnpj)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Usuario.NomeUsuario)
+                @Html.DisplayFor(modelItem => item.Usuario.Email)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdObra">Edit</a> |
