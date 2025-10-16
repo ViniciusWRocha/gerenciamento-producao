@@ -97,13 +97,18 @@ namespace GerenciamentoProducaoo.Controllers
 
 
         [Authorize(Roles = "Administrador,Gerente")]
-
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (id <= 0) return NotFound();
+            if (id <= 0)
+                return NotFound();
+
             var item = await _obraRepository.GetById(id);
-            if (item == null) return NotFound();
-            var vm = await CriarObraViewModel(new ObraViewModel
+            if (item == null)
+                return NotFound();
+
+            // Cria o ViewModel baseado na entidade Obra
+            var vm = new ObraViewModel
             {
                 IdObra = item.IdObra,
                 Nome = item.Nome,
@@ -115,34 +120,43 @@ namespace GerenciamentoProducaoo.Controllers
                 Uf = item.Uf,
                 Cnpj = item.Cnpj,
                 IdUsuario = item.IdUsuario,
-                Usuario = (await _usuarioRepository.GetAllAsync()).Select(t => new SelectListItem
-                {
-                    Value = t.IdUsuario.ToString(),
-                    Text = t.NomeUsuario
-                })
-            });
-            return View(vm);
+                Usuario = (await _usuarioRepository.GetAllAsync())
+                    .Select(t => new SelectListItem
+                    {
+                        Value = t.IdUsuario.ToString(),
+                        Text = t.NomeUsuario
+                    })
+            };
+
+            return View(vm); 
         }
 
 
-        
+
+
         [HttpPut]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ObraViewModel viewModel)
         {
             if (id != viewModel.IdObra)
-            {
                 return NotFound();
-            }
+
             if (!ModelState.IsValid)
             {
-                viewModel = await CriarObraViewModel(viewModel);
-                return RedirectToAction(nameof(Index));
+                // recria as opções do dropdown antes de voltar pra view
+                viewModel.Usuario = (await _usuarioRepository.GetAllAsync())
+                    .Select(t => new SelectListItem
+                    {
+                        Value = t.IdUsuario.ToString(),
+                        Text = t.NomeUsuario
+                    });
+                return View(viewModel);
             }
-            
+
             var obra = await _obraRepository.GetById(id);
-            if (obra == null) return NotFound();
-            
+            if (obra == null)
+                return NotFound();
+
             obra.Nome = viewModel.Nome;
             obra.Construtora = viewModel.Construtora;
             obra.Nro = viewModel.Nro;
@@ -154,8 +168,10 @@ namespace GerenciamentoProducaoo.Controllers
             obra.IdUsuario = viewModel.IdUsuario;
 
             await _obraRepository.UpdateAsync(obra);
+
             return RedirectToAction(nameof(Index));
         }
+
 
 
         [Authorize(Roles = "Administrador,Gerente")]
@@ -169,10 +185,10 @@ namespace GerenciamentoProducaoo.Controllers
 
         [Authorize(Roles = "Administrador,Gerente")]
         [HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int idObra)
         {
-            await _obraRepository.DeleteAsync(id);
+            await _obraRepository.DeleteAsync(idObra);
             return RedirectToAction(nameof(Index));
         }
 

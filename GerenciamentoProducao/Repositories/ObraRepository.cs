@@ -22,7 +22,7 @@ namespace GerenciamentoProducao.Repositories
         public async Task DeleteAsync(int id)
         {
             var obra = await _context.Obras.FindAsync(id);
-            if (obra == null)
+            if (obra != null)
             {
                 _context.Obras.Remove(obra);
                 _context.SaveChangesAsync();
