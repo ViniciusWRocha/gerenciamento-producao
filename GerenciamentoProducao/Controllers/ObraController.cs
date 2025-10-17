@@ -100,8 +100,8 @@ namespace GerenciamentoProducaoo.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (id <= 0)
-                return NotFound();
+            if (id <= 0) return NotFound();
+     
 
             var item = await _obraRepository.GetById(id);
             if (item == null)
@@ -134,12 +134,11 @@ namespace GerenciamentoProducaoo.Controllers
 
 
 
-        [HttpPut]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ObraViewModel viewModel)
         {
-            if (id != viewModel.IdObra)
-                return NotFound();
+            if (id != viewModel.IdObra) return NotFound();
 
             if (!ModelState.IsValid)
             {
@@ -152,6 +151,14 @@ namespace GerenciamentoProducaoo.Controllers
                     });
                 return View(viewModel);
             }
+
+
+            if (!ModelState.IsValid)
+            {
+                viewModel = await CriarObraViewModel(viewModel);
+                return View(viewModel);
+            }
+
 
             var obra = await _obraRepository.GetById(id);
             if (obra == null)

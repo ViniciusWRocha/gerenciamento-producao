@@ -1,5 +1,5 @@
-﻿@model GerenciamentoProducaoo.ViewModel.ObraViewModel
-
+﻿ @model GerenciamentoProducaoo.ViewModel.ObraViewModel 
+@* @model GerenciamentoProducao.Models.Obra *@
 @{
     ViewData["Title"] = "Edit";
 }
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <form asp-action="Edit" asp-route-id="@Model.IdObra" method="post">
-        @Html.AntiForgeryToken()
+        @* @Html.AntiForgeryToken() *@
         <input type="hidden" name="_method" value="PUT" /> <!-- ESSA LINHA É ESSENCIAL -->
         <input type="hidden" asp-for="IdObra" />
 
