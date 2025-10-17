@@ -16,6 +16,7 @@ builder.Services.AddDbContext<GerenciamentoProdDbContext>(options =>
 
 // Repositórios
 builder.Services.AddScoped<IObraRepository, ObraRepository>();
+builder.Services.AddScoped<ICaixilhoRepository, CaixilhoRepository>();
 
 
 //configuração de CORS
@@ -42,7 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //ativar o Cors
-app.UseCors();
+app.UseCors("MyPolicy");
 
 app.UseAuthorization();
 
