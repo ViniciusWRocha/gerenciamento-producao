@@ -1,5 +1,38 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@* @{ *@
+@*     ViewData["Title"] = "Home Page"; *@
+@* } *@
+
+@* <h3>Importar Obra via XML</h3> *@
+
+@* <form asp-action="ImportarObra" enctype="multipart/form-data" method="post"> *@
+@*     <input type="file" name="arquivoXml" accept=".xml" /> *@
+@*     <button type="submit">Importar</button> *@
+@* </form> *@
+
+@* @if (ViewBag.Mensagem != null) *@
+@* { *@
+@*     <div>@ViewBag.Mensagem</div> *@
+@* } *@
+@* <div> home</div> *@
+
+
+@{
+    ViewData["Title"] = "Importar Múltiplos XML";
 }
 
-<div> home</div>
+<h3>Importar Múltiplos XML</h3>
+
+<form asp-action="ImportarObras" enctype="multipart/form-data" method="post">
+    <input type="file" name="arquivosXml" accept=".xml" multiple />
+    <button type="submit">Importar</button>
+</form>
+
+@if (ViewBag.Resultados != null)
+{
+    <ul>
+        @foreach (var resultado in (List<string>)ViewBag.Resultados)
+        {
+            <li>@resultado</li>
+        }
+    </ul>
+}
