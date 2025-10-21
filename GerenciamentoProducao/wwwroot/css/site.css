@@ -155,7 +155,7 @@ body {
     .main {
         margin-left: 0%;
         /*    margin-top:15%;*/
-        margin-top:10%;
+/*        margin-top:10%;*/
 /*        transition: margin-left 0.3s ease;*/
         /*    padding: 20px;*/
     }
@@ -203,7 +203,36 @@ body {
             #sidebar .nav-link:hover {
                 background-color: rgba(255, 255, 255, 0.1);
             }
+/* 1. Larguras da Sidebar (OK) */
+#sidebar {
+    width: 250px;
+    transition: all 0.3s ease;
+    /* ... */
+}
 
+    #sidebar.collapsed {
+        width: 60px;
+        /* O padding: 1rem da sidebar original pode atrapalhar a largura mínima,
+       se for o caso, você pode zerar ele aqui: */
+        /* padding: 0; */
+    }
+
+
+        /* 2. REGRA CHAVE: Faz o UL (#itensMenu) sumir quando a sidebar está colapsada */
+        #sidebar.collapsed #itensMenu {
+            display: none; /* Faz o elemento sumir instantaneamente (se essa for a intenção) */
+            /* Se quiser que o desaparecimento seja gradual (com animação):
+    
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    */
+        }
+
+        /* 3. Ajuste do botão de toggle (Se necessário) */
+        /* Quando a sidebar está pequena, centralize o botão ou ajuste a posição. */
+        #sidebar.collapsed #toggle-sidebar {
+            right: 18px; /* Ajuste para o centro da nova largura de 60px */
+        }
     /* Ícone para abrir/fechar */
     #toggle-sidebar {
         position: absolute;
@@ -241,11 +270,11 @@ body {
     }
 
     .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
 
     #navTop {
-        display: none
+        display: none;
     }
 
     @media (max-width: 1024px) {
