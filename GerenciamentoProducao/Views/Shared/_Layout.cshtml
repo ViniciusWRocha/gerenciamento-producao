@@ -15,38 +15,6 @@
 
 </head>
 <body>
-	@{
-		// Lê a role do usuário autenticado (via Claims)
-		// var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Outros";
-	}
-	@* @if (User.IsInRole("Administrador") || User.IsInRole("Gerente")) *@
-	@* { *@
-
-	@*     <nav class="navbar navbar-toggleable-sm ">  *@
-	@*         <div class="container-fluid">  *@
-	@*             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GerenciamentoProducao</a>  *@
-	@*             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"  *@
-	@*             aria-expanded="false" aria-label="Toggle navigation">  *@
-	@*                 <span class="navbar-toggler-icon"></span>  *@
-	@*             </button>  *@
-	@*             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">  *@
-	@*                 <ul class="navbar-nav flex-grow-1">  *@
-	@*                     <li class="nav-item">  *@
-	@*                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>  *@
-	@*                     </li>  *@
-	@*                     <li class="nav-item">  *@
-	@*                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>  *@
-	@*                     </li><li class="nav-item">  *@
-	@*                         <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuario</a>  *@
-	@*                     </li>  *@
-	@*                     </li>  *@
-	@* <li class="nav-item">  *@
-	@*     <a class="nav-link text-dark" asp-area="" asp-controller="TipoUsuario" asp-action="Index">TipoUsuario</a>  *@
-	@* </li>  *@
-	@* </ul>  *@
-	@* </div>  *@
-	@* </div>  *@
-	@* </nav>  *@
 
 	<!-- Navegação -->
 	@if (User.IsInRole("Administrador") || User.IsInRole("Gerente"))
@@ -84,7 +52,7 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div id="menu" class="collapse navbar-collapse">
-					<ul class="navbar-nav ms-auto">
+					<ul class="navbar-nav ms-auto" id="itensMenu">
 						<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
 						<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
 						<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
@@ -116,24 +84,14 @@
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 	<script>
-		const sidebar = document.getElementById("sidebar");
-		  const toggleButton = document.getElementById("toggle-sidebar");
-		  const nav = document.getElementById("navLeft")
-		  toggleButton.addEventListener("click", () => {
-			  sidebar.classList.toggle("collapsed");
-			if (nav.style.display === 'none') {
-			nav.style.display = ''; volta ao valor padrão
-		} else {
-			nav.style.display = 'none';
-		}
-		  });
 
 
-const path = window.location.pathname;
+
+		const path = window.location.pathname;
 		if (path.includes("/Delete/")) {
 			document.getElementById("navTop").style.display = "none";
 			document.getElementById("sidebar").style.display = "none";
-			document.getElementById("tudo").style.margin = "0"; evita espaço sobrando
+			document.getElementById("tudo").style.margin = "0"; //evita espaço sobrando
 		}
 		if(!path.includes("/Home/Index")){
 			document.getElementsByClassName("main")[0].style.marginTop = "0px";
