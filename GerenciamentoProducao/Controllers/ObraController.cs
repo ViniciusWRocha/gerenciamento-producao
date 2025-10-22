@@ -32,6 +32,16 @@ namespace GerenciamentoProducaoo.Controllers
                 Cep = model?.Cep,
                 Uf = model?.Uf,
                 Cnpj = model?.Cnpj,
+                DataInicio = model?.DataInicio ?? DateTime.Now,
+                DataTermino = model?.DataTermino ?? DateTime.Now.AddMonths(6),
+                PesoFinal = model?.PesoFinal ?? 0,
+                PesoProduzido = model?.PesoProduzido ?? 0,
+                StatusObra = model?.StatusObra ?? "Planejada",
+                Prioridade = model?.Prioridade ?? "Normal",
+                Bandeira = model?.Bandeira ?? "Verde",
+                PercentualConclusao = model?.PercentualConclusao ?? 0,
+                DataConclusao = model?.DataConclusao,
+                Observacoes = model?.Observacoes,
                 IdUsuario = model?.IdUsuario ?? 0,
                 Usuario = usuarios.Select(t => new SelectListItem
                 {
@@ -89,6 +99,16 @@ namespace GerenciamentoProducaoo.Controllers
                 Cep = viewModel.Cep,
                 Uf = viewModel.Uf,
                 Cnpj = viewModel.Cnpj,
+                DataInicio = viewModel.DataInicio,
+                DataTermino = viewModel.DataTermino,
+                PesoFinal = viewModel.PesoFinal,
+                PesoProduzido = viewModel.PesoProduzido,
+                StatusObra = viewModel.StatusObra,
+                Prioridade = viewModel.Prioridade,
+                Bandeira = viewModel.Bandeira,
+                PercentualConclusao = viewModel.PercentualConclusao,
+                DataConclusao = viewModel.DataConclusao,
+                Observacoes = viewModel.Observacoes,
                 IdUsuario = viewModel.IdUsuario
             };
             await _obraRepository.AddAsync(obra);
@@ -119,6 +139,16 @@ namespace GerenciamentoProducaoo.Controllers
                 Cep = item.Cep,
                 Uf = item.Uf,
                 Cnpj = item.Cnpj,
+                DataInicio = item.DataInicio,
+                DataTermino = item.DataTermino,
+                PesoFinal = item.PesoFinal,
+                PesoProduzido = item.PesoProduzido,
+                StatusObra = item.StatusObra,
+                Prioridade = item.Prioridade,
+                Bandeira = item.Bandeira,
+                PercentualConclusao = item.PercentualConclusao,
+                DataConclusao = item.DataConclusao,
+                Observacoes = item.Observacoes,
                 IdUsuario = item.IdUsuario,
                 Usuario = (await _usuarioRepository.GetAllAsync())
                     .Select(t => new SelectListItem
@@ -172,6 +202,16 @@ namespace GerenciamentoProducaoo.Controllers
             obra.Cep = viewModel.Cep;
             obra.Uf = viewModel.Uf;
             obra.Cnpj = viewModel.Cnpj;
+            obra.DataInicio = viewModel.DataInicio;
+            obra.DataTermino = viewModel.DataTermino;
+            obra.PesoFinal = viewModel.PesoFinal;
+            obra.PesoProduzido = viewModel.PesoProduzido;
+            obra.StatusObra = viewModel.StatusObra;
+            obra.Prioridade = viewModel.Prioridade;
+            obra.Bandeira = viewModel.Bandeira;
+            obra.PercentualConclusao = viewModel.PercentualConclusao;
+            obra.DataConclusao = viewModel.DataConclusao;
+            obra.Observacoes = viewModel.Observacoes;
             obra.IdUsuario = viewModel.IdUsuario;
 
             await _obraRepository.UpdateAsync(obra);

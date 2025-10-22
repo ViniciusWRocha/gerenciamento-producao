@@ -1,68 +1,155 @@
 ﻿@model GerenciamentoProducaoo.ViewModel.CaixilhoViewModel
 
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Novo Caixilho";
 }
 
-<h1>Create</h1>
-
-<h4>Caixilho</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="NomeCaixilho" class="control-label"></label>
-                <input asp-for="NomeCaixilho" class="form-control" />
-                <span asp-validation-for="NomeCaixilho" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Largura" class="control-label"></label>
-                <input asp-for="Largura" class="form-control" />
-                <span asp-validation-for="Largura" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Altura" class="control-label"></label>
-                <input asp-for="Altura" class="form-control" />
-                <span asp-validation-for="Altura" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantidade" class="control-label"></label>
-                <input asp-for="Quantidade" class="form-control" />
-                <span asp-validation-for="Quantidade" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PesoUnitario" class="control-label"></label>
-                <input asp-for="PesoUnitario" class="form-control" />
-                <span asp-validation-for="PesoUnitario" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ObraId" class="form-label"></label>
-                <select asp-for="ObraId" asp-items="Model.Obra" class="form-select"></select>
-            
-            </div>
-            <div class="form-group">
-
-                <label asp-for="IdFamiliaCaixilho" class="form-label"></label>
-                <select asp-for="IdFamiliaCaixilho" asp-items="Model.FamiliaCaixilho" class="form-select"></select>
-                
-            </div>
-            <div class="form-group">
-                <label asp-for="IdTipoCaixilho" class="form-label"></label>
-                <select asp-for="IdTipoCaixilho" asp-items="Model.TipoCaixilho" class="form-select"></select>
-              
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Novo Caixilho</h1>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dados do Caixilho</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="NomeCaixilho" class="control-label">Nome do Caixilho</label>
+                                    <input asp-for="NomeCaixilho" class="form-control" />
+                                    <span asp-validation-for="NomeCaixilho" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Quantidade" class="control-label">Quantidade</label>
+                                    <input asp-for="Quantidade" class="form-control" type="number" min="1" />
+                                    <span asp-validation-for="Quantidade" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Largura" class="control-label">Largura (cm)</label>
+                                    <input asp-for="Largura" class="form-control" type="number" step="0.1" />
+                                    <span asp-validation-for="Largura" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="Altura" class="control-label">Altura (cm)</label>
+                                    <input asp-for="Altura" class="form-control" type="number" step="0.1" />
+                                    <span asp-validation-for="Altura" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="PesoUnitario" class="control-label">Peso Unitário (kg)</label>
+                                    <input asp-for="PesoUnitario" class="form-control" type="number" step="0.1" />
+                                    <span asp-validation-for="PesoUnitario" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="StatusProducao" class="control-label">Status de Produção</label>
+                                    <select asp-for="StatusProducao" class="form-control">
+                                        <option value="Pendente" selected>Pendente</option>
+                                        <option value="Em Produção">Em Produção</option>
+                                        <option value="Concluído">Concluído</option>
+                                    </select>
+                                    <span asp-validation-for="StatusProducao" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="ObraId" class="control-label">Obra</label>
+                                    <select asp-for="ObraId" class="form-control" asp-items="Model.Obra"></select>
+                                    <span asp-validation-for="ObraId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="FamiliaCaixilhoId" class="control-label">Família de Caixilho</label>
+                                    <select asp-for="FamiliaCaixilhoId" class="form-control" asp-items="Model.FamiliaCaixilho"></select>
+                                    <span asp-validation-for="FamiliaCaixilhoId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="TipoCaixilhoId" class="control-label">Tipo de Caixilho</label>
+                            <select asp-for="TipoCaixilhoId" class="form-control" asp-items="Model.TipoCaixilho"></select>
+                            <span asp-validation-for="TipoCaixilhoId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input asp-for="Liberado" class="form-check-input" type="checkbox" />
+                                <label asp-for="Liberado" class="form-check-label">
+                                    Liberado para Produção
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">Marque se o caixilho está liberado para produção</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Observacoes" class="control-label">Observações</label>
+                            <textarea asp-for="Observacoes" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Observacoes" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informações</h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        <strong>Caixilho:</strong> Estrutura de alumínio para esquadrias
+                    </p>
+                    <p class="text-muted">
+                        <strong>Liberação:</strong> Necessária para produção
+                    </p>
+                    <p class="text-muted">
+                        <strong>Família:</strong> Grupo de caixilhos relacionados
+                    </p>
+                    <p class="text-muted">
+                        <strong>Peso:</strong> Calculado automaticamente
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

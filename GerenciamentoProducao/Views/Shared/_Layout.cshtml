@@ -12,6 +12,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=side_navigation" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
 </head>
 <body>
@@ -60,14 +61,18 @@
 
 
 		<ul class="nav flex-column gap-2 mt-4" id="navLeft">
+			<li><a class="nav-link" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
 			<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
 			<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
 				<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
-			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
-			<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
-			<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
-			<li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
-			<li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
+                <li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
+                <li><a class="nav-link" asp-controller="Caixilho" asp-action="Liberacoes">🔓 Liberações</a></li>
+                <li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
+                <li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
+                <li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
+                <li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
+                <li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
+                <li><a class="nav-link" asp-controller="RelatorioProducao" asp-action="Index">📊 Relatórios</a></li>
 			@if (User.Identity.IsAuthenticated)
 			{
 				<li class="mt-4">
@@ -85,14 +90,18 @@
 				</button>
 				<div id="menu" class="collapse navbar-collapse">
 					<ul class="navbar-nav ms-auto">
+						<li><a class="nav-link" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
 						<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
 						<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
 						<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
-						<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
-						<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
-						<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
-						<li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
-						<li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
+                <li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
+                <li><a class="nav-link" asp-controller="Caixilho" asp-action="Liberacoes">🔓 Liberações</a></li>
+                <li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
+                <li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
+                <li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
+                <li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
+                <li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
+                <li><a class="nav-link" asp-controller="RelatorioProducao" asp-action="Index">📊 Relatórios</a></li>
 						@if (User.Identity.IsAuthenticated)
 						{
 							<li class="mt-4">
@@ -114,6 +123,7 @@
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Styles", required: false)
 	@await RenderSectionAsync("Scripts", required: false)
 	<script>
 		const sidebar = document.getElementById("sidebar");

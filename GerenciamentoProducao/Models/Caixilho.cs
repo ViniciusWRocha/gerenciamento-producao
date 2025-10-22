@@ -24,6 +24,14 @@ namespace GerenciamentoProducao.Models
         [Required(ErrorMessage = "Campo Obrigatório")]
         public float PesoUnitario { get; set; }
 
+        public bool Liberado { get; set; } = false;
+
+        public DateTime? DataLiberacao { get; set; }
+
+        [StringLength(200)]
+        public string? Observacoes { get; set; }
+
+        public string StatusProducao { get; set; } = "Pendente"; // Pendente, Em Produção, Concluído
 
         [ForeignKey("Obra")]
         public int ObraId { get; set; }

@@ -35,8 +35,8 @@ namespace GerenciamentoProducaoo.Controllers
                 Quantidade = model?.Quantidade ?? 0,
                 PesoUnitario = model?.PesoUnitario ?? 0,
                 ObraId = model?.ObraId ?? 0,
-                IdFamiliaCaixilho = model?.IdFamiliaCaixilho ?? 0,
-                IdTipoCaixilho = model?.IdTipoCaixilho ?? 0,
+                IdFamiliaCaixilho = model?.FamiliaCaixilhoId ?? 0,
+                IdTipoCaixilho = model?.TipoCaixilhoId ?? 0,
                 //Dropdrowns 
                 Obra = obras.Select(o => new SelectListItem
                 {
@@ -83,8 +83,8 @@ namespace GerenciamentoProducaoo.Controllers
                     Quantidade = caixilhoViewModel.Quantidade,
                     PesoUnitario = caixilhoViewModel.PesoUnitario,
                     ObraId = caixilhoViewModel.ObraId,
-                    IdFamiliaCaixilho = caixilhoViewModel.IdFamiliaCaixilho,
-                    IdTipoCaixilho = caixilhoViewModel.IdTipoCaixilho
+                    IdFamiliaCaixilho = caixilhoViewModel.FamiliaCaixilhoId,
+                    IdTipoCaixilho = caixilhoViewModel.TipoCaixilhoId
                 };
                 await _caixilhoRepository.AddAsync(caixilho);
                 return RedirectToAction(nameof(Index));
@@ -112,8 +112,8 @@ namespace GerenciamentoProducaoo.Controllers
                 PesoUnitario = caixilho.PesoUnitario,
 
                 ObraId = caixilho.ObraId,
-                IdFamiliaCaixilho = caixilho.IdFamiliaCaixilho,
-                IdTipoCaixilho = caixilho.IdTipoCaixilho,
+                FamiliaCaixilhoId = caixilho.IdFamiliaCaixilho,
+                TipoCaixilhoId = caixilho.IdTipoCaixilho,
                 //Dropdrowns 
                 Obra = obras.Select(o => new SelectListItem
                 {
@@ -150,8 +150,8 @@ namespace GerenciamentoProducaoo.Controllers
                 caixilho.Quantidade = viewModel.Quantidade;
                 caixilho.PesoUnitario = viewModel.PesoUnitario;
                 caixilho.ObraId = viewModel.ObraId;
-                caixilho.IdFamiliaCaixilho = viewModel.IdFamiliaCaixilho;
-                caixilho.IdTipoCaixilho = viewModel.IdTipoCaixilho;
+                caixilho.IdFamiliaCaixilho = viewModel.FamiliaCaixilhoId;
+                caixilho.IdTipoCaixilho = viewModel.TipoCaixilhoId;
                 await _caixilhoRepository.UpdateAsync(caixilho);
                 return RedirectToAction(nameof(Index));
             }
@@ -177,6 +177,105 @@ namespace GerenciamentoProducaoo.Controllers
         {
             await _caixilhoRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // Método para liberar um caixilho individual
+        [HttpPost]
+        [Authorize(Roles = "Administrador,Gerente")]
+        public async Task<IActionResult> Liberar(int id)
+        {
+            var caixilho = await _caixilhoRepository.GetById(id);
+            if (caixilho == null)
+                return NotFound();
+
+            caixilho.Liberado = true;
+            caixilho.DataLiberacao = DateTime.Now;
+            caixilho.StatusProducao = "Liberado";
+
+            await _caixilhoRepository.UpdateAsync(caixilho);
+            
+            // Atualizar peso produzido da obra
+            await AtualizarPesoObra(caixilho.ObraId);
+            
+            return Json(new { success = true, message = "Caixilho liberado com sucesso!" });
+        }
+
+        // Método para liberar todos os caixilhos de uma família
+        [HttpPost]
+        [Authorize(Roles = "Administrador,Gerente")]
+        public async Task<IActionResult> LiberarFamilia(int familiaId)
+        {
+            var caixilhos = await _caixilhoRepository.GetAllAsync();
+            var caixilhosFamilia = caixilhos.Where(c => c.IdFamiliaCaixilho == familiaId && !c.Liberado).ToList();
+
+            var obrasAfetadas = new HashSet<int>();
+
+            foreach (var caixilho in caixilhosFamilia)
+            {
+                caixilho.Liberado = true;
+                caixilho.DataLiberacao = DateTime.Now;
+                caixilho.StatusProducao = "Liberado";
+                await _caixilhoRepository.UpdateAsync(caixilho);
+                
+                obrasAfetadas.Add(caixilho.ObraId);
+            }
+
+            // Atualizar peso das obras afetadas
+            foreach (var obraId in obrasAfetadas)
+            {
+                await AtualizarPesoObra(obraId);
+            }
+
+            return Json(new { success = true, message = $"Liberados {caixilhosFamilia.Count} caixilhos da família!" });
+        }
+
+        // View para gerenciar liberações
+        [Authorize(Roles = "Administrador,Gerente")]
+        public async Task<IActionResult> Liberacoes()
+        {
+            var caixilhos = await _caixilhoRepository.GetAllAsync();
+            var caixilhosPendentes = caixilhos.Where(c => !c.Liberado).ToList();
+            
+            return View(caixilhosPendentes);
+        }
+
+        // Método para atualizar o peso produzido de uma obra específica
+        private async Task AtualizarPesoObra(int obraId)
+        {
+            var obra = await _obraRepository.GetById(obraId);
+            if (obra == null) return;
+
+            // Calcular peso total dos caixilhos liberados desta obra
+            var caixilhos = await _caixilhoRepository.GetAllAsync();
+            var pesoProduzido = caixilhos
+                .Where(c => c.ObraId == obraId && c.Liberado)
+                .Sum(c => c.PesoUnitario * c.Quantidade);
+
+            // Atualizar o peso produzido da obra
+            obra.PesoProduzido = pesoProduzido;
+            
+            // Calcular percentual de conclusão baseado no peso
+            if (obra.PesoFinal > 0)
+            {
+                obra.PercentualConclusao = Math.Min(100, (pesoProduzido / obra.PesoFinal) * 100);
+            }
+            else
+            {
+                obra.PercentualConclusao = 0;
+            }
+
+            // Atualizar status da obra baseado no progresso
+            if (obra.PercentualConclusao >= 100)
+            {
+                obra.StatusObra = "Concluída";
+                obra.DataConclusao = DateTime.Now;
+            }
+            else if (obra.PercentualConclusao > 0)
+            {
+                obra.StatusObra = "Em Andamento";
+            }
+
+            await _obraRepository.UpdateAsync(obra);
         }
 
     }

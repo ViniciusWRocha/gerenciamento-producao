@@ -4,6 +4,7 @@ using GerenciamentoProducao.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GerenciamentoProducaoo.Migrations
 {
     [DbContext(typeof(GerenciamentoProdDbContext))]
-    partial class GerenciamentoProdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251021235859_RefinamentoEsquadrias")]
+    partial class RefinamentoEsquadrias
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,7 +131,7 @@ namespace GerenciamentoProducaoo.Migrations
                     b.Property<bool>("MetaAtingida")
                         .HasColumnType("bit");
 
-                    b.Property<float>("MetaPesoKg")
+                    b.Property<float>("MetaPeso")
                         .HasColumnType("real");
 
                     b.Property<string>("Observacoes")

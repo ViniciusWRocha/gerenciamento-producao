@@ -24,7 +24,7 @@ namespace GerenciamentoProducao.Repositories
             if (FamiliaCaixilho != null)
             {
                 _context.FamCaixilhos.Remove(FamiliaCaixilho);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
