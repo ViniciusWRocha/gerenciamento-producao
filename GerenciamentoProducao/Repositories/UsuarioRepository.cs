@@ -34,6 +34,10 @@ namespace GerenciamentoProducao.Repositories
         public async Task<List<Usuario>> GetAllAtivosAsync()
         {
             return await _context.Usuarios.Where(u => u.Ativo).Include(u => u.TipoUsuario).ToListAsync();
+        } 
+        public async Task<List<Usuario>> GetAllInativosAsync()
+        {
+            return await _context.Usuarios.Where(u => u.Ativo == false).Include(u => u.TipoUsuario).ToListAsync();
         }
 
         //inativar
