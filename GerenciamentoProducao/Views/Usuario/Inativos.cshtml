@@ -35,6 +35,9 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if(Model != null){
+
+                                
                                 @foreach (var item in Model)
                                 {
                                     <tr>
@@ -64,6 +67,10 @@
                                             </div>
                                         </td>
                                     </tr>
+                                }
+                                }
+                                else{
+                                    <tr><td colspan="6">Não disponivel</td></tr>
                                 }
                             </tbody>
                         </table>

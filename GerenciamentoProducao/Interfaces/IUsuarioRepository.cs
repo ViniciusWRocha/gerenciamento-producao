@@ -9,6 +9,7 @@ namespace GerenciamentoProducao.Interfaces
 
         Task<Usuario> GetById(int id);
         Task<List<Usuario>> GetAllAtivosAsync();
+        Task<List<Usuario>> GetAllInativosAsync();
         Task AddAsync(Usuario usuario);
         Task UpdateAsync(Usuario usuario);
         Task Delete(int id);

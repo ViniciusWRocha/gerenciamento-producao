@@ -240,11 +240,8 @@ public class UsuarioController : Controller
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Inativos()
     {
-        var usuarios = await _usuarioRepository.GetAllAsync();
-        var inativos = usuarios.Where(u => !u.Ativo)
-                               .OrderByDescending(u => u.IdUsuario)
-                               .ToList();
-        return View(inativos);
+        var usuarios = await _usuarioRepository.GetAllInativosAsync();
+        return View(usuarios);
     }
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Ativar(int id)
