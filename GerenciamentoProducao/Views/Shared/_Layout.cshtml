@@ -16,41 +16,9 @@
 
 </head>
 <body>
-	@{
-		// Lê a role do usuário autenticado (via Claims)
-		// var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Outros";
-	}
-	@* @if (User.IsInRole("Administrador") || User.IsInRole("Gerente")) *@
-	@* { *@
-
-	@*     <nav class="navbar navbar-toggleable-sm ">  *@
-	@*         <div class="container-fluid">  *@
-	@*             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GerenciamentoProducao</a>  *@
-	@*             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"  *@
-	@*             aria-expanded="false" aria-label="Toggle navigation">  *@
-	@*                 <span class="navbar-toggler-icon"></span>  *@
-	@*             </button>  *@
-	@*             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">  *@
-	@*                 <ul class="navbar-nav flex-grow-1">  *@
-	@*                     <li class="nav-item">  *@
-	@*                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>  *@
-	@*                     </li>  *@
-	@*                     <li class="nav-item">  *@
-	@*                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>  *@
-	@*                     </li><li class="nav-item">  *@
-	@*                         <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuario</a>  *@
-	@*                     </li>  *@
-	@*                     </li>  *@
-	@* <li class="nav-item">  *@
-	@*     <a class="nav-link text-dark" asp-area="" asp-controller="TipoUsuario" asp-action="Index">TipoUsuario</a>  *@
-	@* </li>  *@
-	@* </ul>  *@
-	@* </div>  *@
-	@* </div>  *@
-	@* </nav>  *@
 
 	<!-- Navegação -->
-	@if (User.IsInRole("Administrador") || User.IsInRole("Gerente"))
+	@if (User.IsInRole("Administrador") || User.IsInRole("Gerente") || User.IsInRole("Outros"))
 	{
 	<nav id="sidebar" class="sidebar">
 		<button id="toggle-sidebar">
@@ -61,14 +29,21 @@
 
 
 		<ul class="nav flex-column gap-2 mt-4" id="navLeft">
+				
 			<li><a class="nav-link" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
+				@if (User.IsInRole("Administrador") || User.IsInRole("Gerente")){
+
 			<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
+				@if (User.IsInRole("Administrador") ){
+
 			<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
 				<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
+				}
                 <li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
                 <li><a class="nav-link" asp-controller="Caixilho" asp-action="Liberacoes">🔓 Liberações</a></li>
                 <li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
                 <li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
+				}
                 <li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
                 <li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
                 <li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
@@ -115,7 +90,9 @@
 	}
 	<div id="tudo">
 		<main role="main" class="main">
-			@RenderBody()
+			<div class="container-fluid">
+				@RenderBody()
+			</div>
 		</main>
 	</div>
 

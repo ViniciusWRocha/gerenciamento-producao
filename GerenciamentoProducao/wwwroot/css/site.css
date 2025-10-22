@@ -13,7 +13,12 @@ html {
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
-
+h1,h2,h3,h4,p{
+    color: white;
+}
+dl{
+    color: white;
+}
 html {
   position: relative;
   min-height: 100%;
@@ -146,21 +151,33 @@ body {
 }
 }
 .main {
-    margin-left: 15%;
-    /*    margin-top:15%;*/
+    background: #222222;
+    margin-left: 14%;
     transition: margin-left 0.3s ease;
-    /*    padding: 20px;*/
+    min-height: 100vh;
+    padding: 20px;
 }
+
 @media (max-width: 1024px) {
     .main {
         margin-left: 0%;
-        /*    margin-top:15%;*/
-        margin-top:10%;
-/*        transition: margin-left 0.3s ease;*/
-        /*    padding: 20px;*/
+        margin-top: 5%;
+        padding: 15px;
     }
+}
 
+@media (max-width: 768px) {
+    .main {
+        margin-top: 15%;
+        padding: 10px;
+    }
+}
 
+@media (max-width: 576px) {
+    .main {
+        margin-top: 10%;
+        padding: 15px;
+    }
 }
     
     
@@ -173,19 +190,19 @@ body {
         width: 110%;
     }
 }
-    #sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 250px;
-        background-color: #212529; /* bg-dark */
-        color: #f8f9fa; /* text-light */
-        padding: 1rem;
-        transition: all 0.3s ease;
-        /*    z-index: 1000;*/
-        overflow-y: auto;
-    }
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: #1d1d1d;
+    color: #f8f9fa; /* text-light */
+    padding: 1rem;
+    transition: all 0.3s ease;
+    /*    z-index: 1000;*/
+    overflow-y: auto;
+}
 
         /* Quando estiver fechada */
         #sidebar.collapsed {
@@ -204,7 +221,7 @@ body {
                 background-color: rgba(255, 255, 255, 0.1);
             }
 
-    /* Ícone para abrir/fechar */
+    /* ï¿½cone para abrir/fechar */
     #toggle-sidebar {
         position: absolute;
         top: 10px;
@@ -227,13 +244,13 @@ body {
             background: #343a40;
         }
 
-    /* Ícone gira quando fecha */
+    /* ï¿½cone gira quando fecha */
     #sidebar.collapsed #toggle-sidebar i {
         transform: rotate(180deg);
         transition: transform 0.3s ease;
     }
 
-    /* Ajuste no conteúdo principal */
+    /* Ajuste no conteï¿½do principal */
 
 
     #sidebar.collapsed ~ .main {
@@ -256,8 +273,53 @@ body {
         #navTop {
             display: initial;
         }
+        
+        .main {
+            margin-left: 0 !important;
+        }
     }
 
     .row {
-        width: 90%;
+        width: 100%;
+        margin: 0 auto;
+    }
+    
+    @media (max-width: 768px) {
+        .row {
+            width: 100%;
+            margin: 0;
+            padding: 0 10px;
+        }
+        
+        .container-fluid {
+            padding: 0 15px;
+        }
+        
+        .card {
+            margin-bottom: 1rem;
+        }
+        
+        .table-responsive {
+            font-size: 0.85rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding: 0 10px;
+        }
+        
+        .card-body {
+            padding: 1rem 0.75rem;
+        }
+        
+        .table-responsive {
+            font-size: 0.75rem;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+    }
     }
