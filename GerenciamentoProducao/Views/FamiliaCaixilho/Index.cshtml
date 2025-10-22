@@ -1,41 +1,68 @@
 ﻿@model IEnumerable<GerenciamentoProducao.Models.FamiliaCaixilho>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Família de Caixilho";
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-white">Família de Caixilho</h1>
+            <p class="text-muted">Gerenciamento de famílias de caixilhos</p>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DescricaoFamilia)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PesoTotal)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DescricaoFamilia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PesoTotal)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdFamiliaCaixilho">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdFamiliaCaixilho">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdFamiliaCaixilho">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Lista de Famílias de Caixilho</h6>
+                    <a asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Nova Família
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Peso Total</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@item.DescricaoFamilia</strong>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-info">
+                                                @item.PesoTotal.ToString("F2") kg
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a asp-action="Edit" asp-route-id="@item.IdFamiliaCaixilho" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a asp-action="Details" asp-route-id="@item.IdFamiliaCaixilho" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.IdFamiliaCaixilho" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

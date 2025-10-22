@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="h3 mb-0 text-gray-800">Caixilhos</h1>
+            <h1 class="h3 mb-0">Caixilhos</h1>
             <p class="text-muted">Gerenciamento de caixilhos e esquadrias</p>
         </div>
     </div>
@@ -68,14 +68,14 @@
                                             <small>@(item.FamiliaCaixilho?.DescricaoFamilia ?? "N/A")</small>
                                         </td>
                                         <td>
-                                            <span class="badge badge-@(item.StatusProducao == "Concluído" ? "success" : item.StatusProducao == "Em Produção" ? "primary" : "secondary")">
+                                            <span class="badge text-bg-@(item.StatusProducao == "Liberado" ? "success" : item.StatusProducao == "Pendente" ? "warning" : "secondary")">
                                                 @item.StatusProducao
                                             </span>
                                         </td>
                                         <td>
                                             @if (item.Liberado)
                                             {
-                                                <span class="badge badge-success">
+                                                <span class="badge badge-success text-bg-success">
                                                     <i class="fas fa-check"></i> Liberado
                                                 </span>
                                                 @if (item.DataLiberacao.HasValue)
@@ -85,7 +85,7 @@
                                             }
                                             else
                                             {
-                                                <span class="badge badge-warning">
+                                                <span class="badge badge-warning text-bg-warning">
                                                     <i class="fas fa-clock"></i> Pendente
                                                 </span>
                                             }

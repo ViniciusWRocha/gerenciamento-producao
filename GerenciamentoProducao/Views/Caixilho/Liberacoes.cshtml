@@ -19,7 +19,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Caixilhos Pendentes de Liberação</h6>
                     <div>
                         <button class="btn btn-success btn-sm" onclick="liberarTodos()">
-                            <i class="fas fa-check-double"></i> Liberar Todos
+                            <i class="fas fa-check-double"></i> Liberar seleção
                         </button>
                         <a asp-action="Index" class="btn btn-secondary btn-sm">
                             <i class="fas fa-arrow-left"></i> Voltar
@@ -60,7 +60,7 @@
                                         <td>@Html.DisplayFor(modelItem => item.Quantidade)</td>
                                         <td>@((item.PesoUnitario * item.Quantidade).ToString("F2")) kg</td>
                                         <td>
-                                            <span class="badge badge-warning">@Html.DisplayFor(modelItem => item.StatusProducao)</span>
+                                            <span class="badge text-bg-warning">@Html.DisplayFor(modelItem => item.StatusProducao)</span>
                                         </td>
                                         <td>
                                             <button class="btn btn-success btn-sm" onclick="liberarCaixilho(@item.IdCaixilho)">

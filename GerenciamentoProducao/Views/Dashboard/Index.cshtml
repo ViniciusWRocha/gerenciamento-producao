@@ -3,15 +3,11 @@
     ViewData["Title"] = "Dashboard";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/dashboard.css" />
-}
-
 <div class="container-fluid">
     <!-- Header -->
-    <div class="row mb-4">
+    <div class="row mb-3">
         <div class="col-12">
-            <h1 class="h3 mb-0 text-gray-800">📊 Dashboard</h1>
+            <h1 class="text-white">📊 Dashboard</h1>
             <p class="text-muted">Visão geral do sistema de gerenciamento de produção</p>
         </div>
     </div>
@@ -35,252 +31,140 @@
     }
 
     <!-- Cards de Métricas -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+    <div class="row mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total de Obras
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.TotalObras</div>
-                            <div class="text-xs text-muted">Em Andamento: @Model.Metricas.ObrasEmAndamento</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-building fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Total de Obras</h6>
+                    <h4 class="text-primary">@Model.Metricas.TotalObras</h4>
+                    <small class="text-muted">Em Andamento: @Model.Metricas.ObrasEmAndamento</small>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Produções Concluídas
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.ProducoesConcluidas</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Produções Concluídas</h6>
+                    <h4 class="text-success">@Model.Metricas.ProducoesConcluidas</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Produções Pendentes
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.ProducoesPendentes</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Produções Pendentes</h6>
+                    <h4 class="text-warning">@Model.Metricas.ProducoesPendentes</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Total de Caixilhos
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.TotalCaixilhos</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-window-maximize fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Total de Caixilhos</h6>
+                    <h4 class="text-info">@Model.Metricas.TotalCaixilhos</h4>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Segunda linha de métricas -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-secondary shadow h-100 py-2">
+    <div class="row mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                Produções Este Mês
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.ProducoesMesAtual</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Produções Este Mês</h6>
+                    <h4 class="text-secondary">@Model.Metricas.ProducoesMesAtual</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-dark shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
-                                Usuários Ativos
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.TotalUsuarios</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Usuários Ativos</h6>
+                    <h4 class="text-dark">@Model.Metricas.TotalUsuarios</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-danger shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Peso Total (kg)
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.PesoTotalCaixilhos.ToString("F1")</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-weight fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Peso Total (kg)</h6>
+                    <h4 class="text-danger">@Model.Metricas.PesoTotalCaixilhos.ToString("F1")</h4>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Taxa de Conclusão
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @{
-                                    var taxaConclusao = Model.Metricas.TotalProducoes > 0 
-                                        ? (Model.Metricas.ProducoesConcluidas * 100.0 / Model.Metricas.TotalProducoes) 
-                                        : 0;
-                                }
-                                @taxaConclusao.ToString("F1")%
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-percentage fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Taxa de Conclusão</h6>
+                    <h4 class="text-primary">
+                        @{
+                            var taxaConclusao = Model.Metricas.TotalProducoes > 0 
+                                ? (Model.Metricas.ProducoesConcluidas * 100.0 / Model.Metricas.TotalProducoes) 
+                                : 0;
+                        }
+                        @taxaConclusao.ToString("F1")%
+                    </h4>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Novos Cards Específicos para Esquadrias -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
+    <!-- Terceira linha de métricas -->
+    <div class="row mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Peso Produzido (Mês)
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.PesoProduzidoMes.ToString("F1") t</div>
-                            <div class="text-xs text-muted">Meta: 30.0 t</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-weight-hanging fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Peso Produzido (Mês)</h6>
+                    <h4 class="text-info">@Model.Metricas.PesoProduzidoMes.ToString("F1") t</h4>
+                    <small class="text-muted">Meta: 30.0 t</small>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Caixilhos Liberados
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.CaixilhosLiberados</div>
-                            <div class="text-xs text-muted">Aguardando: @Model.Metricas.CaixilhosPendentesLiberacao</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Caixilhos Liberados</h6>
+                    <h4 class="text-success">@Model.Metricas.CaixilhosLiberados</h4>
+                    <small class="text-muted">Aguardando: @Model.Metricas.CaixilhosPendentesLiberacao</small>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Obras Atrasadas
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Metricas.ObrasAtrasadas</div>
-                            <div class="text-xs text-muted">Requer atenção</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Obras Atrasadas</h6>
+                    <h4 class="text-warning">@Model.Metricas.ObrasAtrasadas</h4>
+                    <small class="text-muted">Requer atenção</small>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-danger shadow h-100 py-2">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Meta Mensal
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                0%
-                            </div>
-                            <div class="text-xs text-muted">
-                                Meta: 30 toneladas
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-target fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                    <h6 class="card-title">Meta Mensal</h6>
+                    <h4 class="text-danger">0%</h4>
+                    <small class="text-muted">Meta: 30 toneladas</small>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Gráficos -->
-    <div class="row mb-4">
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Produção por Mês</h6>
+    <div class="row mb-3">
+        <div class="col-lg-8 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Produção por Mês</h6>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
@@ -290,13 +174,13 @@
             </div>
         </div>
 
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Status das Obras</h6>
+        <div class="col-lg-4 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Status das Obras</h6>
                 </div>
                 <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
+                    <div class="chart-pie">
                         <canvas id="statusObrasChart"></canvas>
                     </div>
                 </div>
@@ -306,14 +190,14 @@
 
     <!-- Tabelas de Dados Recentes -->
     <div class="row">
-        <div class="col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Produções Recentes</h6>
+        <div class="col-lg-6 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Produções Recentes</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered" width="100%" cellspacing="0">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -329,7 +213,7 @@
                                         <td>@producao.Nome</td>
                                         <td>@producao.Data.ToString("dd/MM/yyyy")</td>
                                         <td>
-                                            <span class="badge badge-@(producao.Status == "Concluída" ? "success" : "warning")">
+                                            <span class="badge bg-@(producao.Status == "Concluída" ? "success" : "warning")">
                                                 @producao.Status
                                             </span>
                                         </td>
@@ -343,14 +227,14 @@
             </div>
         </div>
 
-        <div class="col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Obras Recentes</h6>
+        <div class="col-lg-6 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Obras Recentes</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered" width="100%" cellspacing="0">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -366,7 +250,7 @@
                                     <tr>
                                         <td>
                                             @obra.Nome
-                                            <span class="badge badge-@(obra.Bandeira == "Verde" ? "success" : obra.Bandeira == "Amarela" ? "warning" : obra.Bandeira == "Vermelha" ? "danger" : "dark")">
+                                            <span class="badge bg-@(obra.Bandeira == "Verde" ? "success" : obra.Bandeira == "Amarela" ? "warning" : obra.Bandeira == "Vermelha" ? "danger" : "dark")">
                                                 @obra.Bandeira
                                             </span>
                                         </td>
@@ -374,31 +258,19 @@
                                         <td>@obra.Usuario</td>
                                         <td>@obra.DataCriacao.ToString("dd/MM/yyyy")</td>
                                         <td>
-                                            <div class="progress mb-2" style="height: 25px;">
+                                            <div class="progress mb-2">
                                                 <div class="progress-bar bg-@(obra.PercentualConclusao >= 80 ? "success" : obra.PercentualConclusao >= 50 ? "warning" : "danger")" 
                                                      role="progressbar" 
                                                      style="width: @obra.PercentualConclusao%" 
                                                      aria-valuenow="@obra.PercentualConclusao" 
                                                      aria-valuemin="0" 
                                                      aria-valuemax="100">
-                                                    <span class="font-weight-bold">@obra.PercentualConclusao.ToString("F1")%</span>
+                                                    @obra.PercentualConclusao.ToString("F1")%
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-between small text-muted">
-                                                <span>📦 @obra.PesoProduzido.ToString("F1") kg</span>
-                                                <span>🎯 @obra.PesoFinal.ToString("F1") kg</span>
-                                            </div>
-                                            <div class="small text-info">
-                                                <i class="fas fa-chart-line"></i> 
-                                                @if (obra.PesoFinal > 0)
-                                                {
-                                                    <span>@((obra.PesoProduzido / obra.PesoFinal * 100).ToString("F1"))% do peso total</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>Peso não definido</span>
-                                                }
-                                            </div>
+                                            <small class="text-muted">
+                                                📦 @obra.PesoProduzido.ToString("F1") kg / 🎯 @obra.PesoFinal.ToString("F1") kg
+                                            </small>
                                         </td>
                                     </tr>
                                 }
@@ -413,16 +285,16 @@
     <!-- Caixilhos para Liberação -->
     <div class="row">
         <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">Caixilhos Aguardando Liberação</h6>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="card-title mb-0">Caixilhos Aguardando Liberação</h6>
                     <a asp-controller="Caixilho" asp-action="Liberacoes" class="btn btn-primary btn-sm">
                         <i class="fas fa-unlock"></i> Gerenciar Liberações
                     </a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered" width="100%" cellspacing="0">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -663,3 +535,4 @@
         }, 30000);
     </script>
 }
+
