@@ -24,7 +24,7 @@ namespace GerenciamentoProducao.Repositories
             if (tipoUsuario != null)
             {
                 _context.TipoUsuarios.Remove(tipoUsuario);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 

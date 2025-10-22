@@ -1,0 +1,92 @@
+@model GerenciamentoProducao.Models.MetaMensal
+
+@{
+    ViewData["Title"] = "Detalhes da Meta Mensal";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Detalhes da Meta Mensal</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informações da Meta</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Ano:</dt>
+                        <dd class="col-sm-9">@Model.Ano</dd>
+
+                        <dt class="col-sm-3">Mês:</dt>
+                        <dd class="col-sm-9">@Model.Mes</dd>
+
+                        <dt class="col-sm-3">Meta de Peso:</dt>
+                        <dd class="col-sm-9">@Model.MetaPesoKg.ToString("F0") kg</dd>
+
+                        <dt class="col-sm-3">Peso Produzido:</dt>
+                        <dd class="col-sm-9">@Model.PesoProduzido.ToString("F0") kg</dd>
+
+                        <dt class="col-sm-3">Percentual Atingido:</dt>
+                        <dd class="col-sm-9">
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar @(Model.PercentualAtingido >= 100 ? "bg-success" : Model.PercentualAtingido >= 80 ? "bg-warning" : "bg-danger")" 
+                                     role="progressbar" 
+                                     style="width: @(Math.Min(Model.PercentualAtingido, 100))%" 
+                                     aria-valuenow="@Model.PercentualAtingido" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    @Model.PercentualAtingido.ToString("F1")%
+                                </div>
+                            </div>
+                        </dd>
+
+                        <dt class="col-sm-3">Status:</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.MetaAtingida)
+                            {
+                                <span class="badge badge-success badge-lg">Meta Atingida</span>
+                            }
+                            else if (Model.PercentualAtingido >= 80)
+                            {
+                                <span class="badge badge-warning badge-lg">Próximo da Meta</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger badge-lg">Atrasada</span>
+                            }
+                        </dd>
+
+                        @if (!string.IsNullOrEmpty(Model.Observacoes))
+                        {
+                            <dt class="col-sm-3">Observações:</dt>
+                            <dd class="col-sm-9">@Model.Observacoes</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Ações</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.IdMetaMensal" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

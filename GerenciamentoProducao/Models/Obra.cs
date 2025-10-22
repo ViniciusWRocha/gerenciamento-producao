@@ -41,6 +41,29 @@ namespace GerenciamentoProducao.Models
         [StringLength(14, ErrorMessage = "CEP deve ter 14  caracteres")]
         public string Cnpj { get; set; }
 
+        [Required(ErrorMessage = "Campo Obrigatório")]
+        public DateTime DataInicio { get; set; }
+
+        [Required(ErrorMessage = "Campo Obrigatório")]
+        public DateTime DataTermino { get; set; }
+
+        [Required(ErrorMessage = "Campo Obrigatório")]
+        public float PesoFinal { get; set; }
+
+        public float PesoProduzido { get; set; } = 0;
+
+        public string StatusObra { get; set; } = "Planejada"; // Planejada, Em Andamento, Concluída, Atrasada
+
+        public string Prioridade { get; set; } = "Normal"; // Baixa, Normal, Alta, Crítica
+
+        public string Bandeira { get; set; } = "Verde"; // Verde, Amarela, Vermelha, Crítica
+
+        public float PercentualConclusao { get; set; } = 0;
+
+        public DateTime? DataConclusao { get; set; }
+
+        [StringLength(500)]
+        public string? Observacoes { get; set; }
 
         //lista de caixilhos
         //public List<Caixilho> Caixilhos { get; set; }

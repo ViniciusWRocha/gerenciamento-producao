@@ -1,77 +1,115 @@
 ﻿@model IEnumerable<GerenciamentoProducao.Models.Caixilho>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Caixilhos";
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Caixilhos</h1>
+            <p class="text-muted">Gerenciamento de caixilhos e esquadrias</p>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NomeCaixilho)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Largura)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Altura)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantidade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PesoUnitario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Obra)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdFamiliaCaixilho)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdTipoCaixilho)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NomeCaixilho)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Largura)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Altura)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantidade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PesoUnitario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Obra)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdFamiliaCaixilho)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdTipoCaixilho)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdCaixilho">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdCaixilho">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdCaixilho">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Lista de Caixilhos</h6>
+                    <a asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Novo Caixilho
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Dimensões</th>
+                                    <th>Quantidade</th>
+                                    <th>Peso</th>
+                                    <th>Obra</th>
+                                    <th>Família</th>
+                                    <th>Status</th>
+                                    <th>Liberação</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@item.NomeCaixilho</strong>
+                                            @if (!string.IsNullOrEmpty(item.Observacoes))
+                                            {
+                                                <br><small class="text-muted">@item.Observacoes</small>
+                                            }
+                                        </td>
+                                        <td>
+                                            <small>
+                                                <strong>L:</strong> @item.Largura cm<br>
+                                                <strong>A:</strong> @item.Altura cm
+                                            </small>
+                                        </td>
+                                        <td>@item.Quantidade</td>
+                                        <td>
+                                            <small>
+                                                <strong>Unit:</strong> @item.PesoUnitario.ToString("F1") kg<br>
+                                                <strong>Total:</strong> @((item.PesoUnitario * item.Quantidade).ToString("F1")) kg
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <small>@(item.Obra?.Nome ?? "N/A")</small>
+                                        </td>
+                                        <td>
+                                            <small>@(item.FamiliaCaixilho?.DescricaoFamilia ?? "N/A")</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-@(item.StatusProducao == "Concluído" ? "success" : item.StatusProducao == "Em Produção" ? "primary" : "secondary")">
+                                                @item.StatusProducao
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @if (item.Liberado)
+                                            {
+                                                <span class="badge badge-success">
+                                                    <i class="fas fa-check"></i> Liberado
+                                                </span>
+                                                @if (item.DataLiberacao.HasValue)
+                                                {
+                                                    <br><small class="text-muted">@item.DataLiberacao.Value.ToString("dd/MM/yyyy")</small>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-warning">
+                                                    <i class="fas fa-clock"></i> Pendente
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a asp-action="Edit" asp-route-id="@item.IdCaixilho" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a asp-action="Details" asp-route-id="@item.IdCaixilho" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.IdCaixilho" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

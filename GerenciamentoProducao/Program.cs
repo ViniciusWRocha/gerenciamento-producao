@@ -2,6 +2,8 @@ using GerenciamentoProducao.Data;
 using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,7 @@ builder.Services.AddScoped<IProducaoRepository, ProducaoRepository>();
 
 
 // ======================================================
-// AutenticaÁ„o com COOKIES
+// AutenticaÔøΩÔøΩo com COOKIES
 // ======================================================
 builder.Services.AddAuthentication("GerenciadorProd")
     .AddCookie("GerenciadorProd", options =>
@@ -38,6 +40,15 @@ builder.Services.AddAuthentication("GerenciadorProd")
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Configura√ß√£o de cultura para datas
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "pt-BR", "en-US" };
+    options.SetDefaultCulture("pt-BR")
+           .AddSupportedCultures(supportedCultures)
+           .AddSupportedUICultures(supportedCultures);
+});
+
 var app = builder.Build();
 
 
@@ -51,6 +62,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseHttpMethodOverride();
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 

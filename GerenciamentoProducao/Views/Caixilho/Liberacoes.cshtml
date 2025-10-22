@@ -1,0 +1,258 @@
+@model IEnumerable<GerenciamentoProducao.Models.Caixilho>
+
+@{
+    ViewData["Title"] = "Liberações de Caixilhos";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">Liberações de Caixilhos</h1>
+            <p class="text-muted">Gerencie a liberação de caixilhos para produção</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Caixilhos Pendentes de Liberação</h6>
+                    <div>
+                        <button class="btn btn-success btn-sm" onclick="liberarTodos()">
+                            <i class="fas fa-check-double"></i> Liberar Todos
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                    </th>
+                                    <th>Nome</th>
+                                    <th>Obra</th>
+                                    <th>Família</th>
+                                    <th>Tipo</th>
+                                    <th>Dimensões</th>
+                                    <th>Quantidade</th>
+                                    <th>Peso Total</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" class="caixilho-checkbox" value="@item.IdCaixilho">
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.NomeCaixilho)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Obra.Nome)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.FamiliaCaixilho.DescricaoFamilia)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.TipoCaixilho.DescricaoCaixilho)</td>
+                                        <td>@item.Largura x @item.Altura</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Quantidade)</td>
+                                        <td>@((item.PesoUnitario * item.Quantidade).ToString("F2")) kg</td>
+                                        <td>
+                                            <span class="badge badge-warning">@Html.DisplayFor(modelItem => item.StatusProducao)</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm" onclick="liberarCaixilho(@item.IdCaixilho)">
+                                                <i class="fas fa-check"></i> Liberar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agrupamento por Família -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Liberação por Família</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Família</th>
+                                    <th>Total de Caixilhos</th>
+                                    <th>Pendentes</th>
+                                    <th>Peso Total</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="familiasTable">
+                                <!-- Dados carregados via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Carregar dados das famílias
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarFamilias();
+        });
+
+        function carregarFamilias() {
+            // Agrupar caixilhos por família
+            const caixilhos = @Html.Raw(Json.Serialize(Model));
+            const familias = {};
+            
+            caixilhos.forEach(caixilho => {
+                const familiaId = caixilho.idFamiliaCaixilho;
+                const familiaNome = caixilho.familiaCaixilho?.descricaoFamilia || 'Sem Família';
+                
+                if (!familias[familiaId]) {
+                    familias[familiaId] = {
+                        id: familiaId,
+                        nome: familiaNome,
+                        total: 0,
+                        pendentes: 0,
+                        pesoTotal: 0
+                    };
+                }
+                
+                familias[familiaId].total++;
+                if (!caixilho.liberado) {
+                    familias[familiaId].pendentes++;
+                }
+                familias[familiaId].pesoTotal += caixilho.pesoUnitario * caixilho.quantidade;
+            });
+
+            // Preencher tabela de famílias
+            const tbody = document.getElementById('familiasTable');
+            tbody.innerHTML = '';
+            
+            Object.values(familias).forEach(familia => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${familia.nome}</td>
+                    <td>${familia.total}</td>
+                    <td>${familia.pendentes}</td>
+                    <td>${familia.pesoTotal.toFixed(2)} kg</td>
+                    <td>
+                        <button class="btn btn-success btn-sm" onclick="liberarFamilia(${familia.id})" ${familia.pendentes === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-check-double"></i> Liberar Família
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.caixilho-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+
+        function liberarCaixilho(id) {
+            if (confirm('Tem certeza que deseja liberar este caixilho?')) {
+                fetch(`/Caixilho/Liberar/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Erro ao liberar caixilho: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao liberar caixilho');
+                });
+            }
+        }
+
+        function liberarFamilia(familiaId) {
+            if (confirm('Tem certeza que deseja liberar todos os caixilhos desta família?')) {
+                fetch(`/Caixilho/LiberarFamilia/${familiaId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Erro ao liberar família: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao liberar família');
+                });
+            }
+        }
+
+        function liberarTodos() {
+            const checkboxes = document.querySelectorAll('.caixilho-checkbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Selecione pelo menos um caixilho para liberar');
+                return;
+            }
+
+            if (confirm(`Tem certeza que deseja liberar ${checkboxes.length} caixilho(s) selecionado(s)?`)) {
+                const ids = Array.from(checkboxes).map(cb => cb.value);
+                
+                // Liberar cada caixilho individualmente
+                let promises = ids.map(id => 
+                    fetch(`/Caixilho/Liberar/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        }
+                    })
+                );
+
+                Promise.all(promises)
+                .then(responses => Promise.all(responses.map(r => r.json())))
+                .then(results => {
+                    const sucessos = results.filter(r => r.success).length;
+                    alert(`Liberados ${sucessos} de ${ids.length} caixilhos com sucesso!`);
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao liberar caixilhos');
+                });
+            }
+        }
+    </script>
+}

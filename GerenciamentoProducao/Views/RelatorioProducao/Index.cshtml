@@ -1,0 +1,65 @@
+@model IEnumerable<GerenciamentoProducao.Models.RelatorioProducao>
+
+@{
+    ViewData["Title"] = "Relatórios de Produção";
+}
+
+<h1>Relatórios de Produção</h1>
+
+<p>
+    <a asp-action="Create">Gerar Novo Relatório</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DataRelatorio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ano)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PesoTotalProduzido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusMeta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataRelatorio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ano)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PesoTotalProduzido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusMeta)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Usuario.NomeUsuario)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdRelatorio">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.IdRelatorio">Detalhes</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdRelatorio">Deletar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

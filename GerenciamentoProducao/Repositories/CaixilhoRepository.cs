@@ -25,7 +25,7 @@ namespace GerenciamentoProducao.Repositories
             if (caixilho != null)
             {
                 _context.Caixilhos.Remove(caixilho);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 

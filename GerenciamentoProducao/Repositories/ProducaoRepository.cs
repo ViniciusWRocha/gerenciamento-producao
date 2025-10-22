@@ -24,7 +24,7 @@ namespace GerenciamentoProducao.Repositories
             if (producao != null)
             {
                 _context.Producoes.Remove(producao);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 

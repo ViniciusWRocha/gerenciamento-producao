@@ -5,7 +5,6 @@ namespace GerenciamentoProducao.Data
 {
     public class GerenciamentoProdDbContext : DbContext
     {
-
         public GerenciamentoProdDbContext(DbContextOptions<GerenciamentoProdDbContext> options) : base(options) { }
 
         //models
@@ -29,10 +28,15 @@ namespace GerenciamentoProducao.Data
         //models Liberacao
         public DbSet<FamiliaCaixilho> FamCaixilhos { get; set; }
 
+        //models MetaMensal
+        public DbSet<MetaMensal> MetasMensais { get; set; }
 
+        //models RelatorioProducao
+        public DbSet<RelatorioProducao> RelatoriosProducao { get; set; }
 
-
-
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
