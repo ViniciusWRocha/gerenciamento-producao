@@ -32,7 +32,7 @@
                                     <th>Peso</th>
                                     <th>Progresso</th>
                                     <th>Status</th>
-                                    <th>Bandeira</th>
+                                    @* <th>Bandeira</th> *@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
@@ -73,15 +73,15 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge badge-@(item.StatusObra == "Concluída" ? "success" : item.StatusObra == "Em Andamento" ? "primary" : item.StatusObra == "Atrasada" ? "danger" : "secondary")">
+                                            <span class="badge text-bg-@(item.StatusObra == "Concluída" ? "success" : item.StatusObra == "Em Andamento" ? "primary" : item.StatusObra == "Atrasada" ? "danger" : "secondary")">
                                                 @item.StatusObra
                                             </span>
                                         </td>
-                                        <td>
-                                            <span class="badge badge-@(item.Bandeira == "Verde" ? "success" : item.Bandeira == "Amarela" ? "warning" : item.Bandeira == "Vermelha" ? "danger" : "dark")">
-                                                @item.Bandeira
-                                            </span>
-                                        </td>
+                                        @* <td> *@
+                                            @* <span class="badge badge-@(item.Bandeira == "Verde" ? "success" : item.Bandeira == "Amarela" ? "warning" : item.Bandeira == "Vermelha" ? "danger" : "dark")"> *@
+                                            @*     @item.Bandeira *@
+                                            @* </span> *@
+                                        @* </td> *@
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a asp-action="Edit" asp-route-id="@item.IdObra" class="btn btn-sm btn-warning">

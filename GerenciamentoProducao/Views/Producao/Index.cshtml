@@ -44,22 +44,22 @@
                                         </td>
                                         <td>@item.DataProducao.ToString("dd/MM/yyyy")</td>
                                         <td>
-                                            <span class="badge badge-@(item.Produzido ? "success" : "warning")">
+                                            <span class="badge text-bg-@(item.Produzido ? "success" : "warning")">
                                                 @(item.Produzido ? "Produzido" : "Pendente")
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge badge-@(item.EhLiberado ? "success" : "danger")">
+                                            <span class="badge text-bg-@(item.EhLiberado ? "success" : "danger")">
                                                 @(item.EhLiberado ? "Sim" : "Não")
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge badge-info">
+                                            <span class="badge badge-info text-black">
                                                 @item.Usuario?.NomeUsuario
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge badge-secondary">
+                                            <span class="badge badge-secondary text-black">
                                                 @item.FamiliaCaixilho?.DescricaoFamilia
                                             </span>
                                         </td>

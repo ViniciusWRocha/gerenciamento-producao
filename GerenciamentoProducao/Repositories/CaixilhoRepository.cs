@@ -39,12 +39,20 @@ namespace GerenciamentoProducao.Repositories
 
         public async Task<List<Caixilho>> GetAllAsync()
         {
-            return await _context.Caixilhos.ToListAsync();
+            return await _context.Caixilhos
+                .Include(c => c.Obra)
+                .Include(c => c.FamiliaCaixilho)
+                .Include(c => c.TipoCaixilho)
+                .ToListAsync();
         }
 
         public async Task<Caixilho> GetById(int id)
         {
-            return await _context.Caixilhos.FindAsync(id);
+            return await _context.Caixilhos
+                .Include(c => c.Obra)
+                .Include(c => c.FamiliaCaixilho)
+                .Include(c => c.TipoCaixilho)
+                .FirstOrDefaultAsync(c => c.IdCaixilho == id);
         }
 
         public async Task UpdateAsync(Caixilho caixilho)
