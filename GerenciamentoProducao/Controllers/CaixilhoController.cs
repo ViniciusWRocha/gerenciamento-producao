@@ -162,6 +162,23 @@ namespace GerenciamentoProducaoo.Controllers
         }
 
 
+        // GET: Caixilho/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var caixilho = await _caixilhoRepository.GetById(id.Value);
+            if (caixilho == null)
+            {
+                return NotFound();
+            }
+
+            return View(caixilho);
+        }
+
         [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id)
         {

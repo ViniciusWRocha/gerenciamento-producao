@@ -14,6 +14,10 @@ namespace GerenciamentoProducao.Models
         [Required(ErrorMessage = "Campo Obrigatório")]
         public int PesoTotal { get; set; }
 
+        // Propriedade calculada para exibir o peso total formatado
+        [NotMapped]
+        public string PesoTotalFormatado => $"{PesoTotal:F2} kg";
+
 
     }
 }

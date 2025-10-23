@@ -1,37 +1,55 @@
 ﻿@model GerenciamentoProducao.Models.FamiliaCaixilho
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Família de Caixilho";
 }
 
-<h1>Edit</h1>
-
-<h4>FamiliaCaixilho</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdFamiliaCaixilho" />
-            <div class="form-group">
-                <label asp-for="DescricaoFamilia" class="control-label"></label>
-                <input asp-for="DescricaoFamilia" class="form-control" />
-                <span asp-validation-for="DescricaoFamilia" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PesoTotal" class="control-label"></label>
-                <input asp-for="PesoTotal" class="form-control" />
-                <span asp-validation-for="PesoTotal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-white">Editar Família de Caixilho</h1>
+            <p class="text-muted">Editar informações da família de caixilhos</p>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informações da Família</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="IdFamiliaCaixilho" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="DescricaoFamilia" class="form-label">Descrição da Família</label>
+                                    <input asp-for="DescricaoFamilia" class="form-control" />
+                                    <span asp-validation-for="DescricaoFamilia" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Peso Total Atual</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="@Model.PesoTotalFormatado" readonly />
+                                        <span class="input-group-text">Calculado automaticamente</span>
+                                    </div>
+                                    <small class="form-text text-muted">O peso é calculado automaticamente baseado nos caixilhos desta família.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Salvar Alterações" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

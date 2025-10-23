@@ -148,6 +148,23 @@ namespace GerenciamentoProducaoo.Controllers
             return View(producao);
         }
 
+        // GET: Producao/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var producao = await _producaoRepository.GetByIdAsync(id.Value);
+            if (producao == null)
+            {
+                return NotFound();
+            }
+
+            return View(producao);
+        }
+
         // Excluir produção (POST - confirmado)
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Administrador,Gerente")]

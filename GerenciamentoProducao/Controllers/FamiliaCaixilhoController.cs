@@ -35,6 +35,8 @@ namespace GerenciamentoProducao.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Inicializar o peso como 0 - será calculado automaticamente
+                familia.PesoTotal = 0;
                 await _familiaCaixilhoRepository.AddAsync(familia);
                 return RedirectToAction(nameof(Index));
             }
@@ -87,14 +89,46 @@ namespace GerenciamentoProducao.Controllers
         }
 
 
-        //public async Task<IActionResult> Details(int id)
-        //{
-        //    var familia = await _familiaCaixilhoRepository.GetByIdAsync(id);
-        //    if (familia == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(familia);
-        //}
+        // GET: FamiliaCaixilho/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var familia = await _familiaCaixilhoRepository.GetByIdAsync(id.Value);
+            if (familia == null)
+            {
+                return NotFound();
+            }
+            return View(familia);
+        }
+
+        // POST: FamiliaCaixilho/RecalcularPesos
+        [HttpPost]
+        [Authorize(Roles = "Administrador,Gerente")]
+        public async Task<IActionResult> RecalcularPesos()
+        {
+            try
+            {
+                var familias = await _familiaCaixilhoRepository.GetAllAsync();
+                int familiasAtualizadas = 0;
+
+                foreach (var familia in familias)
+                {
+                    await _familiaCaixilhoRepository.AtualizarPesoTotalAsync(familia.IdFamiliaCaixilho);
+                    familiasAtualizadas++;
+                }
+
+                TempData["SuccessMessage"] = $"Pesos recalculados com sucesso para {familiasAtualizadas} famílias.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Erro ao recalcular pesos: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }

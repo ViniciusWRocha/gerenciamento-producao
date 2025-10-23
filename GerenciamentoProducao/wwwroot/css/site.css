@@ -61,14 +61,19 @@ body {
     align-items: center;
 
 }
+dl.row{
+    color: black;
+    & span{
+              color: black;
+        }
+}
 
-
-    .login-box h1 {
-        margin: 0 0 30px;
-        padding: 0;
-        color: white;
-        text-align: center;
-    }
+.login-box h1 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: white;
+    text-align: center;
+}
 
     .login-box .user-box {
         position: relative;

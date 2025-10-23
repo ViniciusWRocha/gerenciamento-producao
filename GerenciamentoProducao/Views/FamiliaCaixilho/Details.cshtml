@@ -1,0 +1,60 @@
+@model GerenciamentoProducao.Models.FamiliaCaixilho
+
+@{
+    ViewData["Title"] = "Detalhes da Família de Caixilho";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-white">Detalhes da Família de Caixilho</h1>
+            <p class="text-muted">Informações completas da família de caixilho</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Informações da Família de Caixilho</h6>
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@Model.IdFamiliaCaixilho" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">ID:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-info">@Model.IdFamiliaCaixilho</span>
+                                </dd>
+
+                                <dt class="col-sm-4">Descrição:</dt>
+                                <dd class="col-sm-8">
+                                    <strong>@Model.DescricaoFamilia</strong>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Peso Total:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-success">
+                                        @Model.PesoTotalFormatado
+                                    </span>
+                                    <small class="text-muted d-block">Calculado automaticamente</small>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

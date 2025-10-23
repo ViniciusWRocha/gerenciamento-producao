@@ -9,5 +9,7 @@ namespace GerenciamentoProducao.Interfaces
          Task UpdateAsync(FamiliaCaixilho familiaCaixilho);
          Task DeleteAsync(int id);
          Task<FamiliaCaixilho> GetByIdAsync(int id);
+         Task<float> CalcularPesoTotalAsync(int familiaId);
+         Task AtualizarPesoTotalAsync(int familiaId);
     }
 }
