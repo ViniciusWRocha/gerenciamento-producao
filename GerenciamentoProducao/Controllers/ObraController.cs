@@ -221,6 +221,23 @@ namespace GerenciamentoProducaoo.Controllers
 
 
 
+        // GET: Obra/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var obra = await _obraRepository.GetById(id.Value);
+            if (obra == null)
+            {
+                return NotFound();
+            }
+
+            return View(obra);
+        }
+
         [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Delete(int id)
         {

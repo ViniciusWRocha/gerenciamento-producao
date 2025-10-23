@@ -44,5 +44,26 @@ namespace GerenciamentoProducao.Repositories
             _context.FamCaixilhos.Update(familiaCaixilho);
             await _context.SaveChangesAsync();
         }
+
+        // Método para calcular o peso total automaticamente
+        public async Task<float> CalcularPesoTotalAsync(int familiaId)
+        {
+            var caixilhos = await _context.Caixilhos
+                .Where(c => c.IdFamiliaCaixilho == familiaId)
+                .ToListAsync();
+
+            return caixilhos.Sum(c => c.PesoUnitario * c.Quantidade);
+        }
+
+        // Método para atualizar o peso total de uma família
+        public async Task AtualizarPesoTotalAsync(int familiaId)
+        {
+            var familia = await _context.FamCaixilhos.FindAsync(familiaId);
+            if (familia != null)
+            {
+                familia.PesoTotal = (int)await CalcularPesoTotalAsync(familiaId);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

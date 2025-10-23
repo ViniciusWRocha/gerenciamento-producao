@@ -243,6 +243,23 @@ public class UsuarioController : Controller
         var usuarios = await _usuarioRepository.GetAllInativosAsync();
         return View(usuarios);
     }
+
+    // GET: Usuario/Details/5
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var usuario = await _usuarioRepository.GetById(id.Value);
+        if (usuario == null)
+        {
+            return NotFound();
+        }
+
+        return View(usuario);
+    }
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Ativar(int id)
     {

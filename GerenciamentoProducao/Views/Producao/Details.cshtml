@@ -1,0 +1,96 @@
+@model GerenciamentoProducao.Models.Producao
+
+@{
+    ViewData["Title"] = "Detalhes da Produção";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-white">Detalhes da Produção</h1>
+            <p class="text-muted">Informações completas da produção</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Informações da Produção</h6>
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@Model.IdProducao" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Informações Básicas</h6>
+                            <dl class="row">
+                                <dt class="col-sm-4">ID:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-info">@Model.IdProducao</span>
+                                </dd>
+
+                                <dt class="col-sm-4">Nome:</dt>
+                                <dd class="col-sm-8">
+                                    <strong>@Model.NomeProducao</strong>
+                                </dd>
+
+                                <dt class="col-sm-4">Data:</dt>
+                                <dd class="col-sm-8">@Model.DataProducao.ToString("dd/MM/yyyy")</dd>
+
+                                <dt class="col-sm-4">Status:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-@(Model.Produzido ? "success" : "warning")">
+                                        @(Model.Produzido ? "Produzido" : "Pendente")
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Status e Liberação</h6>
+                            <dl class="row">
+                                <dt class="col-sm-4">Liberado:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-@(Model.EhLiberado ? "success" : "danger")">
+                                        @(Model.EhLiberado ? "Sim" : "Não")
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Usuário:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-info">
+                                        @Model.Usuario?.NomeUsuario
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Família:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-secondary">
+                                        @Model.FamiliaCaixilho?.DescricaoFamilia
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Descricao))
+                    {
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <h6 class="text-primary mb-3">Descrição</h6>
+                                <p class="text-muted">@Model.Descricao</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

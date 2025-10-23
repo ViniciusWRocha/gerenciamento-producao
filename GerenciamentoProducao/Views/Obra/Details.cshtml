@@ -1,0 +1,151 @@
+@model GerenciamentoProducao.Models.Obra
+
+@{
+    ViewData["Title"] = "Detalhes da Obra";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-white">Detalhes da Obra</h1>
+            <p class="text-muted">Informações completas da obra</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Informações da Obra</h6>
+                    <div>
+                        <a asp-action="Edit" asp-route-id="@Model.IdObra" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Informações Básicas</h6>
+                            <dl class="row">
+                                <dt class="col-sm-4">Nome:</dt>
+                                <dd class="col-sm-8">
+                                    <strong>@Model.Nome</strong>
+                                </dd>
+
+                                <dt class="col-sm-4">Construtora:</dt>
+                                <dd class="col-sm-8">@Model.Construtora</dd>
+
+                                <dt class="col-sm-4">Número:</dt>
+                                <dd class="col-sm-8">@Model.Nro</dd>
+
+                                <dt class="col-sm-4">CNPJ:</dt>
+                                <dd class="col-sm-8">@Model.Cnpj</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Status e Progresso</h6>
+                            <dl class="row">
+                                <dt class="col-sm-4">Status:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-@(Model.StatusObra == "Concluída" ? "success" : Model.StatusObra == "Em Andamento" ? "primary" : Model.StatusObra == "Atrasada" ? "danger" : "secondary")">
+                                        @Model.StatusObra
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Bandeira:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-@(Model.Bandeira == "Verde" ? "success" : Model.Bandeira == "Amarela" ? "warning" : Model.Bandeira == "Vermelha" ? "danger" : "dark")">
+                                        @Model.Bandeira
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Prioridade:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-@(Model.Prioridade == "Crítica" ? "danger" : Model.Prioridade == "Alta" ? "warning" : Model.Prioridade == "Normal" ? "info" : "secondary")">
+                                        @Model.Prioridade
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Progresso:</dt>
+                                <dd class="col-sm-8">
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar @(Model.PercentualConclusao >= 80 ? "bg-success" : Model.PercentualConclusao >= 50 ? "bg-warning" : "bg-danger")" 
+                                             role="progressbar" 
+                                             style="width: @Model.PercentualConclusao%" 
+                                             aria-valuenow="@Model.PercentualConclusao" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                            @Model.PercentualConclusao.ToString("F1")%
+                                        </div>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Endereço</h6>
+                            <dl class="row">
+                                <dt class="col-sm-4">Logradouro:</dt>
+                                <dd class="col-sm-8">@Model.Logradouro</dd>
+
+                                <dt class="col-sm-4">Bairro:</dt>
+                                <dd class="col-sm-8">@Model.Bairro</dd>
+
+                                <dt class="col-sm-4">CEP:</dt>
+                                <dd class="col-sm-8">@Model.Cep</dd>
+
+                                <dt class="col-sm-4">UF:</dt>
+                                <dd class="col-sm-8">@Model.Uf</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Datas e Peso</h6>
+                            <dl class="row">
+                                <dt class="col-sm-4">Data Início:</dt>
+                                <dd class="col-sm-8">@Model.DataInicio.ToString("dd/MM/yyyy")</dd>
+
+                                <dt class="col-sm-4">Data Término:</dt>
+                                <dd class="col-sm-8">@Model.DataTermino.ToString("dd/MM/yyyy")</dd>
+
+                                @if (Model.DataConclusao.HasValue)
+                                {
+                                    <dt class="col-sm-4">Data Conclusão:</dt>
+                                    <dd class="col-sm-8">@Model.DataConclusao.Value.ToString("dd/MM/yyyy")</dd>
+                                }
+
+                                <dt class="col-sm-4">Peso Final:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-info">@Model.PesoFinal.ToString("F0") kg</span>
+                                </dd>
+
+                                <dt class="col-sm-4">Peso Produzido:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge badge-success">@Model.PesoProduzido.ToString("F0") kg</span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Observacoes))
+                    {
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <h6 class="text-primary mb-3">Observações</h6>
+                                <p class="text-muted">@Model.Observacoes</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
