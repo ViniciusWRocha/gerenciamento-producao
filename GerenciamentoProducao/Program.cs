@@ -32,9 +32,14 @@ builder.Services.AddAuthentication("GerenciadorProd")
         options.AccessDeniedPath = "/Usuario/AcessoNegado"; 
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
         options.SlidingExpiration = true;                  
-    }); 
+    });
 
-
+builder.Services.AddSingleton(sp =>
+    new GoogleCalendarService(
+        builder.Configuration["GoogleCalendar:CredentialsPath"],
+        builder.Configuration["GoogleCalendar:ApplicationName"]
+    )
+);
 
 
 // Add services to the container.
