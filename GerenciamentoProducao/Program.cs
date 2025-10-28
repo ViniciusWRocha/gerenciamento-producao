@@ -1,6 +1,7 @@
 using GerenciamentoProducao.Data;
 using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Repositories;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
@@ -34,12 +35,7 @@ builder.Services.AddAuthentication("GerenciadorProd")
         options.SlidingExpiration = true;                  
     });
 
-builder.Services.AddSingleton(sp =>
-    new GoogleCalendarService(
-        builder.Configuration["GoogleCalendar:CredentialsPath"],
-        builder.Configuration["GoogleCalendar:ApplicationName"]
-    )
-);
+
 
 
 // Add services to the container.
