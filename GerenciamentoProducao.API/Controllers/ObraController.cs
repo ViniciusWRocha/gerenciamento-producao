@@ -47,7 +47,5 @@ namespace GerenciamentoProducao.API.Controllers
             }
             return Ok(resultado);
         }
-        
-        //public async Task<IActionResult> Get(int )
     }
 }
