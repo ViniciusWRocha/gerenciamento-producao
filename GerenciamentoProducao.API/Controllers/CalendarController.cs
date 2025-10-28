@@ -26,22 +26,18 @@ public class CalendarController : ControllerBase
     [HttpPost("create")]
     public IActionResult CreateEvent([FromBody] CreateEventDto dto)
     {
-        // ⚠️ Nota: Como o método 'request.Execute()' no seu Service é síncrono, 
-        // usaremos IActionResult e chamadas diretas aqui para simplificar.
-        // Em um projeto real, é melhor tornar o Service assíncrono (ExecuteAsync).
-
         try
         {
-            // Chamada ao Service para inserir o evento no calendário 'primary' (principal)
+            // Use o ID do calendário compartilhado
+            var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
             var ev = _calendarService.CreateEvent(
-                "primary",
+                calendarId,
                 dto.Title,
                 dto.Start,
                 dto.End,
                 dto.Description
             );
 
-            // Retorna sucesso com dados úteis
             return Ok(new
             {
                 success = true,
@@ -52,11 +48,10 @@ public class CalendarController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Trata erros da API do Google (ex: permissão negada, formato inválido)
             return BadRequest(new
             {
                 success = false,
-                error = "Erro ao criar evento. Verifique as permissões da Service Account e os dados.",
+                error = "Erro ao criar evento.",
                 details = ex.Message
             });
         }
@@ -72,14 +67,12 @@ public class CalendarController : ControllerBase
     {
         try
         {
-            // Lista eventos a partir de agora
-            var events = _calendarService.ListEvents("primary", DateTime.Now);
+            var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+            var events = _calendarService.ListEvents(calendarId);
 
-            // Mapeia para um formato mais limpo (FullCalendar geralmente espera title, start, end)
             var formattedEvents = events.Select(ev => new
             {
                 title = ev.Summary,
-                // Garantimos que pegamos a string de data/hora correta (dateTimeRaw ou date)
                 start = ev.Start.DateTimeRaw ?? ev.Start.Date,
                 end = ev.End.DateTimeRaw ?? ev.End.Date
             }).ToList();
@@ -96,13 +89,13 @@ public class CalendarController : ControllerBase
             });
         }
     }
-}
 
-// DTO (Data Transfer Object) para receber dados da requisição POST
-public class CreateEventDto
-{
-    public string Title { get; set; } = string.Empty;
-    public DateTime Start { get; set; }
-    public DateTime End { get; set; }
-    public string Description { get; set; } = string.Empty;
+    // DTO (Data Transfer Object) para receber dados da requisição POST
+    public class CreateEventDto
+    {
+        public string Title { get; set; } = string.Empty;
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public string Description { get; set; } = string.Empty;
+    }
 }
