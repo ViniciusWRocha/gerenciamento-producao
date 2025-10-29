@@ -30,6 +30,9 @@ namespace GerenciamentoProducaoo.ViewModel
         public DateTime? DataConclusao { get; set; }
         public string? Observacoes { get; set; }
         
+        // ID do evento no Google Calendar
+        public string? GoogleCalendarEventId { get; set; }
+        
         public int IdUsuario { get; set; }
         public IEnumerable<SelectListItem>? Usuario { get; set; }
 

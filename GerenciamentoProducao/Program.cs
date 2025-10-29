@@ -1,6 +1,7 @@
 using GerenciamentoProducao.Data;
 using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Repositories;
+using GerenciamentoProducao.Services;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
@@ -21,6 +22,12 @@ builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
 builder.Services.AddScoped<IFamiliaCaixilhoRepository, FamiliaCaixilhoRepository>();
 builder.Services.AddScoped<IObraRepository, ObraRepository>();
 builder.Services.AddScoped<IProducaoRepository, ProducaoRepository>();
+
+// Google Calendar Service
+var credentialsPath = Path.Combine(builder.Environment.ContentRootPath, "Credentials", "credentials-service.json");
+var appName = "Gerenciador de Producao";
+var calendarService = new GoogleCalendarService(credentialsPath, appName);
+builder.Services.AddSingleton(calendarService);
 
 
 // ======================================================
