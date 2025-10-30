@@ -4,6 +4,7 @@ using GerenciamentoProducao.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GerenciamentoProducaoo.Migrations
 {
     [DbContext(typeof(GerenciamentoProdDbContext))]
-    partial class GerenciamentoProdDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029000023_AddGoogleCalendarEventId")]
+    partial class AddGoogleCalendarEventId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,9 +191,6 @@ namespace GerenciamentoProducaoo.Migrations
 
                     b.Property<DateTime>("DataTermino")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("Finalizado")
-                        .HasColumnType("bit");
 
                     b.Property<string>("GoogleCalendarEventId")
                         .HasMaxLength(100)

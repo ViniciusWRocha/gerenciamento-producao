@@ -29,6 +29,11 @@ namespace GerenciamentoProducaoo.ViewModel
         public float PercentualConclusao { get; set; }
         public DateTime? DataConclusao { get; set; }
         public string? Observacoes { get; set; }
+        public bool Finalizado { get; set; } 
+
+
+        // ID do evento no Google Calendar
+        public string? GoogleCalendarEventId { get; set; }
         
         public int IdUsuario { get; set; }
         public IEnumerable<SelectListItem>? Usuario { get; set; }

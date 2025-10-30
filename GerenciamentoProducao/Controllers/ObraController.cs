@@ -1,6 +1,7 @@
 ﻿using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Models;
 using GerenciamentoProducao.Repositories;
+using GerenciamentoProducao.Services;
 using GerenciamentoProducaoo.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,13 @@ namespace GerenciamentoProducaoo.Controllers
     {
         private readonly IObraRepository _obraRepository;
         private readonly IUsuarioRepository _usuarioRepository;
-        public ObraController(IObraRepository obraRepository, IUsuarioRepository usuarioRepository)
+        private readonly GoogleCalendarService _calendarService;
+        
+        public ObraController(IObraRepository obraRepository, IUsuarioRepository usuarioRepository, GoogleCalendarService calendarService)
         {
             _obraRepository = obraRepository;
             _usuarioRepository = usuarioRepository;
+            _calendarService = calendarService;
         }
         private async Task<ObraViewModel> CriarObraViewModel(ObraViewModel? model = null)
         {
@@ -42,7 +46,10 @@ namespace GerenciamentoProducaoo.Controllers
                 PercentualConclusao = model?.PercentualConclusao ?? 0,
                 DataConclusao = model?.DataConclusao,
                 Observacoes = model?.Observacoes,
+                Finalizado = model?.Finalizado ?? false,
                 IdUsuario = model?.IdUsuario ?? 0,
+                
+                GoogleCalendarEventId = model?.GoogleCalendarEventId,
                 Usuario = usuarios.Select(t => new SelectListItem
                 {
                     Value = t.IdUsuario.ToString(),
@@ -57,7 +64,7 @@ namespace GerenciamentoProducaoo.Controllers
             var obras = await _obraRepository.GetAllAsync();
             if (IdUsuario.HasValue && IdUsuario.Value > 0)
             {
-                obras = obras.Where(o => o.IdUsuario == IdUsuario.Value).ToList(); 
+                obras = obras.Where(o => o.IdUsuario == IdUsuario.Value).Where(o => o.Finalizado == false).ToList(); 
             }
             if (!string.IsNullOrEmpty(search))
             {
@@ -68,6 +75,12 @@ namespace GerenciamentoProducaoo.Controllers
             ViewBag.Usuarios = new SelectList(await _usuarioRepository.GetAllAsync(), "IdUsuario", "NomeUsuario");
             ViewBag.TermoBusca = search;
 
+            return View(obras);
+        }
+        public async Task<IActionResult> Finalizados()
+        {
+            var obras = await _obraRepository.GetAllFinalizadosAsync();
+            obras = obras.OrderByDescending(o => o.IdObra).ToList();
             return View(obras);
         }
 
@@ -109,9 +122,44 @@ namespace GerenciamentoProducaoo.Controllers
                 PercentualConclusao = viewModel.PercentualConclusao,
                 DataConclusao = viewModel.DataConclusao,
                 Observacoes = viewModel.Observacoes,
+                Finalizado = viewModel.Finalizado,
                 IdUsuario = viewModel.IdUsuario
             };
+            
+            // Criar evento no Google Calendar primeiro
+            try
+            {
+                var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+                var eventTitle = $"🏗️ Obra: {obra.Nome}";
+                var eventDescription = $"Obra: {obra.Nome}\n" +
+                                    $"Construtora: {obra.Construtora}\n" +
+                                    $"Endereço: {obra.Logradouro}, {obra.Nro} - {obra.Bairro}\n" +
+                                    $"Status: {obra.StatusObra}\n" +
+                                    $"Prioridade: {obra.Prioridade}\n" +
+                                    $"Peso Final: {obra.PesoFinal} kg\n" +
+                                    (!string.IsNullOrEmpty(obra.Observacoes) ? $"Observações: {obra.Observacoes}" : "");
+                
+                var calendarEvent = _calendarService.CreateEvent(
+                    calendarId,
+                    eventTitle,
+                    obra.DataInicio,
+                    obra.DataTermino,
+                    eventDescription
+                );
+                
+                // Armazenar o ID do evento na obra
+                obra.GoogleCalendarEventId = calendarEvent.Id;
+                
+                TempData["SuccessMessage"] = $"Obra criada com sucesso! Evento adicionado ao calendário: {calendarEvent.HtmlLink}";
+            }
+            catch (Exception ex)
+            {
+                // Log do erro, mas não impede a criação da obra
+                TempData["WarningMessage"] = $"Obra criada com sucesso, mas houve erro ao adicionar ao calendário: {ex.Message}";
+            }
+            
             await _obraRepository.AddAsync(obra);
+            
             return RedirectToAction(nameof(Index));
         }
 
@@ -161,7 +209,7 @@ namespace GerenciamentoProducaoo.Controllers
             return View(vm); 
         }
 
-
+        
 
 
         [HttpPost]
@@ -214,6 +262,53 @@ namespace GerenciamentoProducaoo.Controllers
             obra.Observacoes = viewModel.Observacoes;
             obra.IdUsuario = viewModel.IdUsuario;
 
+            // Atualizar evento no Google Calendar (se existir)
+            try
+            {
+                var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+                var eventTitle = $"🏗️ Obra: {obra.Nome}";
+                var eventDescription = $"Obra: {obra.Nome}\n" +
+                                    $"Construtora: {obra.Construtora}\n" +
+                                    $"Endereço: {obra.Logradouro}, {obra.Nro} - {obra.Bairro}\n" +
+                                    $"Status: {obra.StatusObra}\n" +
+                                    $"Prioridade: {obra.Prioridade}\n" +
+                                    $"Peso Final: {obra.PesoFinal} kg\n" +
+                                    (!string.IsNullOrEmpty(obra.Observacoes) ? $"Observações: {obra.Observacoes}" : "");
+                
+                if (!string.IsNullOrEmpty(obra.GoogleCalendarEventId))
+                {
+                    // Atualizar evento existente
+                    var calendarEvent = _calendarService.UpdateEvent(
+                        calendarId,
+                        obra.GoogleCalendarEventId,
+                        eventTitle,
+                        obra.DataInicio,
+                        obra.DataTermino,
+                        eventDescription
+                    );
+                    
+                    TempData["SuccessMessage"] = $"Obra atualizada com sucesso! Evento atualizado no calendário.";
+                }
+                else
+                {
+                    // Criar novo evento se não existir ID
+                    var calendarEvent = _calendarService.CreateEvent(
+                        calendarId,
+                        eventTitle,
+                        obra.DataInicio,
+                        obra.DataTermino,
+                        eventDescription
+                    );
+                    
+                    obra.GoogleCalendarEventId = calendarEvent.Id;
+                    TempData["SuccessMessage"] = $"Obra atualizada com sucesso! Novo evento criado no calendário.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["WarningMessage"] = $"Obra atualizada com sucesso, mas houve erro ao atualizar o calendário: {ex.Message}";
+            }
+            
             await _obraRepository.UpdateAsync(obra);
 
             return RedirectToAction(nameof(Index));
@@ -252,6 +347,32 @@ namespace GerenciamentoProducaoo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int idObra)
         {
+            // Buscar a obra antes de deletar para obter o ID do evento
+            var obra = await _obraRepository.GetById(idObra);
+            if (obra == null)
+            {
+                return NotFound();
+            }
+
+            // Deletar evento do Google Calendar (se existir)
+            if (!string.IsNullOrEmpty(obra.GoogleCalendarEventId))
+            {
+                try
+                {
+                    var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+                    _calendarService.DeleteEvent(calendarId, obra.GoogleCalendarEventId);
+                    TempData["SuccessMessage"] = "Obra e evento do calendário deletados com sucesso!";
+                }
+                catch (Exception ex)
+                {
+                    TempData["WarningMessage"] = $"Obra deletada com sucesso, mas houve erro ao deletar o evento do calendário: {ex.Message}";
+                }
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Obra deletada com sucesso!";
+            }
+
             await _obraRepository.DeleteAsync(idObra);
             return RedirectToAction(nameof(Index));
         }

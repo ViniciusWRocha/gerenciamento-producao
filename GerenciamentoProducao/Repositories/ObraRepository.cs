@@ -33,6 +33,12 @@ namespace GerenciamentoProducao.Repositories
         {
             return await _context.Obras.ToListAsync();
         }
+        public async Task<List<Obra>> GetAllFinalizadosAsync()
+        {
+            return await _context.Obras
+                .Where(o => o.Finalizado)
+                .ToListAsync();
+        }
 
         public async Task<Obra> GetById(int id)
         {

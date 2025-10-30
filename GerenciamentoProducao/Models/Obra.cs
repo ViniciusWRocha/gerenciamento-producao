@@ -65,6 +65,12 @@ namespace GerenciamentoProducao.Models
         [StringLength(500)]
         public string? Observacoes { get; set; }
 
+        public bool Finalizado { get; set; }
+
+        // ID do evento no Google Calendar
+        [StringLength(100)]
+        public string? GoogleCalendarEventId { get; set; }
+
         //lista de caixilhos
         //public List<Caixilho> Caixilhos { get; set; }
         [ForeignKey("Usuario")]
