@@ -46,7 +46,9 @@ namespace GerenciamentoProducaoo.Controllers
                 PercentualConclusao = model?.PercentualConclusao ?? 0,
                 DataConclusao = model?.DataConclusao,
                 Observacoes = model?.Observacoes,
+                Finalizado = model?.Finalizado ?? false,
                 IdUsuario = model?.IdUsuario ?? 0,
+                
                 GoogleCalendarEventId = model?.GoogleCalendarEventId,
                 Usuario = usuarios.Select(t => new SelectListItem
                 {
@@ -62,7 +64,7 @@ namespace GerenciamentoProducaoo.Controllers
             var obras = await _obraRepository.GetAllAsync();
             if (IdUsuario.HasValue && IdUsuario.Value > 0)
             {
-                obras = obras.Where(o => o.IdUsuario == IdUsuario.Value).ToList(); 
+                obras = obras.Where(o => o.IdUsuario == IdUsuario.Value).Where(o => o.Finalizado == false).ToList(); 
             }
             if (!string.IsNullOrEmpty(search))
             {
@@ -73,6 +75,12 @@ namespace GerenciamentoProducaoo.Controllers
             ViewBag.Usuarios = new SelectList(await _usuarioRepository.GetAllAsync(), "IdUsuario", "NomeUsuario");
             ViewBag.TermoBusca = search;
 
+            return View(obras);
+        }
+        public async Task<IActionResult> Finalizados()
+        {
+            var obras = await _obraRepository.GetAllFinalizadosAsync();
+            obras = obras.OrderByDescending(o => o.IdObra).ToList();
             return View(obras);
         }
 
@@ -114,6 +122,7 @@ namespace GerenciamentoProducaoo.Controllers
                 PercentualConclusao = viewModel.PercentualConclusao,
                 DataConclusao = viewModel.DataConclusao,
                 Observacoes = viewModel.Observacoes,
+                Finalizado = viewModel.Finalizado,
                 IdUsuario = viewModel.IdUsuario
             };
             
@@ -200,7 +209,7 @@ namespace GerenciamentoProducaoo.Controllers
             return View(vm); 
         }
 
-
+        
 
 
         [HttpPost]

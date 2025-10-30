@@ -1,0 +1,155 @@
+﻿@model IEnumerable<GerenciamentoProducao.Models.Obra>
+
+@{
+    ViewData["Title"] = "Finalizados";
+}
+
+<h1>Finalizados</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Construtora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Logradouro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bairro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cep)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Uf)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cnpj)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataTermino)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PesoFinal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PesoProduzido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusObra)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prioridade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bandeira)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PercentualConclusao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataConclusao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Observacoes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Finalizado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoogleCalendarEventId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Construtora)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Logradouro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bairro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cep)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uf)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cnpj)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataTermino)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PesoFinal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PesoProduzido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusObra)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prioridade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bandeira)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PercentualConclusao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataConclusao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Observacoes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Finalizado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoogleCalendarEventId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Usuario.Email)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdObra">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdObra">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdObra">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
