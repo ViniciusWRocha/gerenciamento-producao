@@ -15,6 +15,8 @@ namespace GerenciamentoProducao.API.DTOs
         public string Uf { get; set; }
         public string Cnpj { get; set; }
         public int IdUsuario { get; set; }
-        public string NomeUsuario { get; set; }     
+        public string NomeUsuario { get; set; }
+        public bool Finalizado { get; set; }
+
     }
 }

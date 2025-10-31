@@ -18,11 +18,6 @@ namespace GerenciamentoProducao.API.Controllers
         {
             _obraRepository = obraRepository;
         }
-
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
         [HttpGet]
         public async  Task<IActionResult> GetAllObras()
         {
@@ -42,7 +37,60 @@ namespace GerenciamentoProducao.API.Controllers
                     Uf= obra.Uf,
                     Cnpj= obra.Cnpj,
                     IdUsuario= obra.IdUsuario,
+                    Finalizado = obra.Finalizado
+
                     //NomeUsuario= obra.Usuario.NomeUsuario,    
+                });
+            }
+            return Ok(resultado);
+        }
+
+        [HttpGet("finalizadas")]
+        public async Task<IActionResult> GetAllObrasFinalizadas()
+        {
+            var obras = await _obraRepository.GetAllFinalizadosAsync();
+            var resultado = new List<ObraOutputDTO>();
+            foreach (var obra in obras)
+            {
+                resultado.Add(new ObraOutputDTO
+                {
+                    IdObra = obra.IdObra,
+                    Nome = obra.Nome,
+                    Construtora = obra.Construtora,
+                    Nro = obra.Nro,
+                    Logradouro = obra.Logradouro,
+                    Bairro = obra.Bairro,
+                    Cep = obra.Cep,
+                    Uf = obra.Uf,
+                    Cnpj = obra.Cnpj,
+                    IdUsuario = obra.IdUsuario,
+                    Finalizado = obra.Finalizado
+                    //NomeUsuario= obra.Usuario?.NomeUsuario ?? string.Empty,    
+                });
+            }
+            return Ok(resultado);
+        }
+        [HttpGet("Naofinalizadas")]
+        public async Task<IActionResult> GetAllObrasNaoFinalizadas()
+        {
+            var obras = await _obraRepository.GetAllNaoFinalizadosAsync();
+            var resultado = new List<ObraOutputDTO>();
+            foreach (var obra in obras)
+            {
+                resultado.Add(new ObraOutputDTO
+                {
+                    IdObra = obra.IdObra,
+                    Nome = obra.Nome,
+                    Construtora = obra.Construtora,
+                    Nro = obra.Nro,
+                    Logradouro = obra.Logradouro,
+                    Bairro = obra.Bairro,
+                    Cep = obra.Cep,
+                    Uf = obra.Uf,
+                    Cnpj = obra.Cnpj,
+                    IdUsuario = obra.IdUsuario,
+                    Finalizado = obra.Finalizado
+                    //NomeUsuario= obra.Usuario?.NomeUsuario ?? string.Empty,    
                 });
             }
             return Ok(resultado);

@@ -61,7 +61,7 @@ namespace GerenciamentoProducaoo.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int? IdUsuario,string? search)
         {
-            var obras = await _obraRepository.GetAllAsync();
+            var obras = await _obraRepository.GetAllNaoFinalizadosAsync();
             if (IdUsuario.HasValue && IdUsuario.Value > 0)
             {
                 obras = obras.Where(o => o.IdUsuario == IdUsuario.Value).Where(o => o.Finalizado == false).ToList(); 

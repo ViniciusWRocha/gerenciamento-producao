@@ -20,6 +20,9 @@ html {
 h1,h2,h3,h4,p{
     color: white;
 }
+a.nav-link {
+    font-size: .875rem;
+}
 dl{
     color: white;
 }
@@ -206,7 +209,7 @@ dl.row{
     top: 0;
     left: 0;
     height: 100vh;
-    width: 250px;
+    width: 200px;
     background-color: #1d1d1d;
     color: #f8f9fa; /* text-light */
     padding: 1rem;
@@ -270,14 +273,14 @@ dl.row{
     /* Ajuste no conte�do principal */
 
 
-    #sidebar.collapsed ~ .main {
+/*    #sidebar.collapsed ~ .main {
         margin-left: 60px;
-    }
+    }*/
     
     /* Garantir que o main seja ajustado quando sidebar estiver minimizada */
-    #sidebar.collapsed + * .main {
+/*    #sidebar.collapsed + * .main {
         margin-left: 60px !important;
-    }
+    }*/
 
     .material-symbols-outlined {
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24

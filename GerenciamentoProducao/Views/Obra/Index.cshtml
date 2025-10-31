@@ -3,8 +3,9 @@
 @{
     ViewData["Title"] = "Obras";
 }
-adicionar caminho para finalizado com uma view estilizada
+
 <div class="container-fluid">
+
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="h3 mb-0 text-white">Obras</h1>
@@ -19,6 +20,7 @@ adicionar caminho para finalizado com uma view estilizada
                     <h6 class="m-0 font-weight-bold text-primary">Lista de Obras</h6>
                     <a asp-action="Create" class="btn btn-primary btn-sm">
                         <i class="fas fa-plus"></i> Nova Obra
+                    <a class="btn btn-primary btn-sm" asp-controller="Obra" asp-action="Finalizados">Obras Finalizadas</a>
                     </a>
                 </div>
                 <div class="card-body">
