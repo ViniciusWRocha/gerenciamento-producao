@@ -11,15 +11,20 @@ namespace GerenciamentoProducaoo.Controllers
 {
     public class ObraController : Controller
     {
+        private readonly string _calendarId;
+
+
         private readonly IObraRepository _obraRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly GoogleCalendarService _calendarService;
+
         
-        public ObraController(IObraRepository obraRepository, IUsuarioRepository usuarioRepository, GoogleCalendarService calendarService)
+        public ObraController(IObraRepository obraRepository, IUsuarioRepository usuarioRepository, GoogleCalendarService calendarService, IConfiguration configuration)
         {
             _obraRepository = obraRepository;
             _usuarioRepository = usuarioRepository;
             _calendarService = calendarService;
+            _calendarId = configuration["Google:key"];
         }
         private async Task<ObraViewModel> CriarObraViewModel(ObraViewModel? model = null)
         {
@@ -77,6 +82,9 @@ namespace GerenciamentoProducaoo.Controllers
 
             return View(obras);
         }
+        [Authorize(Roles = "Administrador,Gerente")]
+        [HttpGet]
+
         public async Task<IActionResult> Finalizados()
         {
             var obras = await _obraRepository.GetAllFinalizadosAsync();
@@ -93,6 +101,7 @@ namespace GerenciamentoProducaoo.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrador,Gerente")]
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ObraViewModel viewModel)
@@ -129,7 +138,8 @@ namespace GerenciamentoProducaoo.Controllers
             // Criar evento no Google Calendar primeiro
             try
             {
-                var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+
+                var calendarId = _calendarId;
                 var eventTitle = $"🏗️ Obra: {obra.Nome}";
                 var eventDescription = $"Obra: {obra.Nome}\n" +
                                     $"Construtora: {obra.Construtora}\n" +
@@ -197,6 +207,8 @@ namespace GerenciamentoProducaoo.Controllers
                 PercentualConclusao = item.PercentualConclusao,
                 DataConclusao = item.DataConclusao,
                 Observacoes = item.Observacoes,
+                Finalizado = item.Finalizado,
+                GoogleCalendarEventId = item.GoogleCalendarEventId,
                 IdUsuario = item.IdUsuario,
                 Usuario = (await _usuarioRepository.GetAllAsync())
                     .Select(t => new SelectListItem
@@ -211,7 +223,7 @@ namespace GerenciamentoProducaoo.Controllers
 
         
 
-
+        [Authorize(Roles = "Administrador,Gerente")]
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ObraViewModel viewModel)
@@ -229,14 +241,6 @@ namespace GerenciamentoProducaoo.Controllers
                     });
                 return View(viewModel);
             }
-
-
-            if (!ModelState.IsValid)
-            {
-                viewModel = await CriarObraViewModel(viewModel);
-                return View(viewModel);
-            }
-
 
             var obra = await _obraRepository.GetById(id);
             if (obra == null)
@@ -265,7 +269,7 @@ namespace GerenciamentoProducaoo.Controllers
             // Atualizar evento no Google Calendar (se existir)
             try
             {
-                var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+                var calendarId = _calendarId;
                 var eventTitle = $"🏗️ Obra: {obra.Nome}";
                 var eventDescription = $"Obra: {obra.Nome}\n" +
                                     $"Construtora: {obra.Construtora}\n" +
@@ -359,7 +363,7 @@ namespace GerenciamentoProducaoo.Controllers
             {
                 try
                 {
-                    var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+                    var calendarId = _calendarId;
                     _calendarService.DeleteEvent(calendarId, obra.GoogleCalendarEventId);
                     TempData["SuccessMessage"] = "Obra e evento do calendário deletados com sucesso!";
                 }

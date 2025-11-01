@@ -11,11 +11,12 @@ public class CalendarController : ControllerBase
 {
     // O Service é injetado automaticamente pelo framework
     private readonly GoogleCalendarService _calendarService;
-
+    private readonly string _calendarId;
     // Construtor que recebe a instância do Service configurada no Program.cs
-    public CalendarController(GoogleCalendarService calendarService)
+    public CalendarController(GoogleCalendarService calendarService, IConfiguration configuration)
     {
         _calendarService = calendarService;
+        _calendarId = configuration["Google:key"];
     }
 
     // --- Endpoint para CRIAR EVENTO (POST /api/Calendar/create) ---
@@ -29,7 +30,7 @@ public class CalendarController : ControllerBase
         try
         {
             // Use o ID do calendário compartilhado
-            var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+            var calendarId = _calendarId;
             var ev = _calendarService.CreateEvent(
                 calendarId,
                 dto.Title,
@@ -67,7 +68,7 @@ public class CalendarController : ControllerBase
     {
         try
         {
-            var calendarId = "e96a4fe0acce51e1436e1b25ecfd9055123036df7caabdbfcad011b2a82111fb@group.calendar.google.com";
+            var calendarId = _calendarId;
             var events = _calendarService.ListEvents(calendarId);
 
             var formattedEvents = events.Select(ev => new

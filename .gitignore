@@ -366,3 +366,5 @@ FodyWeavers.xsd
 **/credentials.json
 **/credentials-service.json
 **/Credentials/
+GerenciamentoProducao/Credentials/credentials-service.json
+GerenciamentoProducao.API/Credentials/credentials-service.json

@@ -284,6 +284,7 @@ namespace GerenciamentoProducaoo.Controllers
             // Atualizar status da obra baseado no progresso
             if (obra.PercentualConclusao >= 100)
             {
+                obra.Finalizado = true;
                 obra.StatusObra = "Concluída";
                 obra.DataConclusao = DateTime.Now;
             }
