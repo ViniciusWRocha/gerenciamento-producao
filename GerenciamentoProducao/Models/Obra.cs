@@ -67,6 +67,9 @@ namespace GerenciamentoProducao.Models
 
         public bool Finalizado { get; set; }
 
+        [StringLength(255)]
+        public string? ImagemObraPath { get; set; }
+
         // ID do evento no Google Calendar
         [StringLength(100)]
         public string? GoogleCalendarEventId { get; set; }

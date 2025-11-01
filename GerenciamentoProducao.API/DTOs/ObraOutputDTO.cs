@@ -17,6 +17,7 @@ namespace GerenciamentoProducao.API.DTOs
         public int IdUsuario { get; set; }
         public string NomeUsuario { get; set; }
         public bool Finalizado { get; set; }
+        public string? ImagemObraPath { get; set; }
 
     }
 }

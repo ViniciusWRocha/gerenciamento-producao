@@ -21,7 +21,11 @@
 	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
 
 </head>
-<body>
+<body class="theme-dark">
+	<button id="themeToggle" type="button" class="btn btn-outline-light btn-sm theme-toggle">
+		<i class="fas fa-sun me-2"></i>
+		<span>Tema Claro</span>
+	</button>
 
 	<!-- Navegação -->
 	@if (User.IsInRole("Administrador") || User.IsInRole("Gerente") || User.IsInRole("Outros"))
@@ -109,6 +113,60 @@
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Styles", required: false)
 	@await RenderSectionAsync("Scripts", required: false)
+	<script>
+		(function () {
+			const toggleBtn = document.getElementById('themeToggle');
+			if (!toggleBtn) {
+				return;
+			}
+
+			const root = document.documentElement;
+
+			const storedTheme = localStorage.getItem('theme-preference');
+			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			const initialTheme = storedTheme ?? (prefersDark ? 'dark' : 'light');
+
+			applyTheme(initialTheme);
+			updateToggle(initialTheme === 'dark');
+
+			toggleBtn.addEventListener('click', () => {
+				const isDark = document.body.classList.contains('theme-dark');
+				const nextTheme = isDark ? 'light' : 'dark';
+				applyTheme(nextTheme);
+				localStorage.setItem('theme-preference', nextTheme);
+				updateToggle(nextTheme === 'dark');
+			});
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+				if (!localStorage.getItem('theme-preference')) {
+					const newTheme = event.matches ? 'dark' : 'light';
+					applyTheme(newTheme);
+					updateToggle(newTheme === 'dark');
+				}
+			});
+
+			function applyTheme(theme) {
+				const themeClass = `theme-${theme}`;
+				document.body.classList.remove('theme-dark', 'theme-light');
+				document.body.classList.add(themeClass);
+				root.classList.remove('theme-dark', 'theme-light');
+				root.classList.add(themeClass);
+				root.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
+			}
+
+			function updateToggle(isDark) {
+				if (isDark) {
+					toggleBtn.classList.add('btn-outline-light');
+					toggleBtn.classList.remove('btn-light');
+					toggleBtn.innerHTML = '<i class="fas fa-sun me-2"></i><span>Tema Claro</span>';
+				} else {
+					toggleBtn.classList.remove('btn-outline-light');
+					toggleBtn.classList.add('btn-light');
+					toggleBtn.innerHTML = '<i class="fas fa-moon me-2"></i><span>Tema Escuro</span>';
+				}
+			}
+		})();
+	</script>
 @* 	<script> *@
 		
 @* const path = window.location.pathname; *@

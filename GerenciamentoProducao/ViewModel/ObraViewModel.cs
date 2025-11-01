@@ -1,6 +1,7 @@
 ﻿using GerenciamentoProducao.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GerenciamentoProducaoo.ViewModel
@@ -30,6 +31,10 @@ namespace GerenciamentoProducaoo.ViewModel
         public DateTime? DataConclusao { get; set; }
         public string? Observacoes { get; set; }
         public bool Finalizado { get; set; } 
+
+        public string? ImagemObraPath { get; set; }
+
+        public IFormFile? ImagemUpload { get; set; }
 
 
         // ID do evento no Google Calendar

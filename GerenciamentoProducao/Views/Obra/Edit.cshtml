@@ -18,8 +18,9 @@
                     <h6 class="m-0 font-weight-bold text-primary">Dados da Obra</h6>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Edit" asp-route-id="@Model.IdObra" method="post">
+                    <form asp-action="Edit" asp-route-id="@Model.IdObra" method="post" enctype="multipart/form-data">
                         <input type="hidden" asp-for="IdObra" />
+                        <input type="hidden" asp-for="ImagemObraPath" />
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         
                         <div class="row">
@@ -162,6 +163,25 @@
                             <label asp-for="Observacoes" class="control-label">Observações</label>
                             <textarea asp-for="Observacoes" class="form-control" rows="3"></textarea>
                             <span asp-validation-for="Observacoes" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label d-block">Imagem cadastrada</label>
+                            @if (!string.IsNullOrEmpty(Model.ImagemObraPath))
+                            {
+                                <img src="@Url.Content("~/" + Model.ImagemObraPath)" alt="Imagem da obra" class="img-fluid img-thumbnail mb-2" style="max-height: 200px;" />
+                            }
+                            else
+                            {
+                                <p class="text-muted">Nenhuma imagem cadastrada.</p>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ImagemUpload" class="control-label">Nova imagem (opcional)</label>
+                            <input asp-for="ImagemUpload" class="form-control" type="file" accept="image/*" />
+                            <small class="form-text text-muted">Selecione uma imagem para atualizar a visualização da obra.</small>
+                            <span asp-validation-for="ImagemUpload" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">

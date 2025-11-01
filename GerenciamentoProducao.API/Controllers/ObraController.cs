@@ -37,7 +37,8 @@ namespace GerenciamentoProducao.API.Controllers
                     Uf= obra.Uf,
                     Cnpj= obra.Cnpj,
                     IdUsuario= obra.IdUsuario,
-                    Finalizado = obra.Finalizado
+                    Finalizado = obra.Finalizado,
+                    ImagemObraPath = obra.ImagemObraPath
 
                     //NomeUsuario= obra.Usuario.NomeUsuario,    
                 });
@@ -64,7 +65,8 @@ namespace GerenciamentoProducao.API.Controllers
                     Uf = obra.Uf,
                     Cnpj = obra.Cnpj,
                     IdUsuario = obra.IdUsuario,
-                    Finalizado = obra.Finalizado
+                    Finalizado = obra.Finalizado,
+                    ImagemObraPath = obra.ImagemObraPath
                     //NomeUsuario= obra.Usuario?.NomeUsuario ?? string.Empty,    
                 });
             }
@@ -89,7 +91,8 @@ namespace GerenciamentoProducao.API.Controllers
                     Uf = obra.Uf,
                     Cnpj = obra.Cnpj,
                     IdUsuario = obra.IdUsuario,
-                    Finalizado = obra.Finalizado
+                    Finalizado = obra.Finalizado,
+                    ImagemObraPath = obra.ImagemObraPath
                     //NomeUsuario= obra.Usuario?.NomeUsuario ?? string.Empty,    
                 });
             }

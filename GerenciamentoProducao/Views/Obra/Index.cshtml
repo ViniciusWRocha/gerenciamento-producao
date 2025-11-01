@@ -28,6 +28,7 @@
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
+                                    <th class="text-center">Imagem</th>
                                     <th>Nome</th>
                                     <th>Construtora</th>
                                     <th>Período</th>
@@ -42,6 +43,16 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
+                                        <td class="text-center align-middle">
+                                            @if (!string.IsNullOrEmpty(item.ImagemObraPath))
+                                            {
+                                                <img src="@Url.Content("~/" + item.ImagemObraPath)" alt="Imagem de @item.Nome" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;" />
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small">Sem imagem</span>
+                                            }
+                                        </td>
                                         <td>
                                             <strong>@item.Nome</strong>
                                             @if (!string.IsNullOrEmpty(item.Observacoes))

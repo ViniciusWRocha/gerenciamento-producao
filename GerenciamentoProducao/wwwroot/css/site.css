@@ -5,26 +5,54 @@ html {
     margin: 0;
     font-family: "Fira Code", monospace;
 }
+
+:root {
+    color-scheme: dark;
+    --gp-body-bg: #222222;
+    --gp-body-color: #f8f9fa;
+    --gp-heading-color: #f8f9fa;
+    --gp-muted-color: #adb5bd;
+    --gp-card-bg: #1f1f1f;
+    --gp-card-border: rgba(255, 255, 255, 0.1);
+    --gp-card-accent: rgba(255, 255, 255, 0.05);
+    --gp-form-bg: #2b2b2b;
+    --gp-form-border: rgba(255, 255, 255, 0.2);
+    --gp-sidebar-bg: #1d1d1d;
+    --gp-sidebar-text: #f8f9fa;
+    --gp-sidebar-hover-bg: rgba(255, 255, 255, 0.1);
+    --gp-navtop-bg: #000000;
+    --gp-navtop-link: #f8f9fa;
+    --gp-navtop-link-hover: #ffffff;
+    --gp-border-color: rgba(255, 255, 255, 0.08);
+    --gp-toggle-bg: #1f1f1f;
+    --gp-toggle-border: rgba(255, 255, 255, 0.2);
+    --gp-toggle-color: #f8f9fa;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
+
 .text-muted{
-    color: white;
+    color: var(--gp-muted-color) !important;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.25), 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
 }
 h1,h2,h3,h4,p{
-    color: white;
+    color: var(--gp-heading-color);
 }
 a.nav-link {
     font-size: .875rem;
 }
-dl{
-    color: white;
+dl, dl.row{
+    color: var(--gp-body-color);
+}
+dl.row span{
+    color: inherit;
 }
 html {
   position: relative;
@@ -32,10 +60,11 @@ html {
 }
 
 html {
-    background: #222222;
+    background: var(--gp-body-bg);
 }
 body {
-    background: #222222;
+    background: var(--gp-body-bg);
+    color: var(--gp-body-color);
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -165,11 +194,43 @@ dl.row{
 }
 }
 .main {
-    background: #222222;
+    background: var(--gp-body-bg);
     margin-left: 250px;
     transition: margin-left 0.3s ease;
 /*    min-height: 100vh;*/
     padding: 20px;
+}
+
+.card {
+    background-color: var(--gp-card-bg);
+    color: var(--gp-body-color);
+    border-color: var(--gp-card-border);
+}
+
+.card .card-header,
+.card .card-footer {
+    background-color: var(--gp-card-accent);
+    color: var(--gp-body-color);
+    border-color: var(--gp-card-border);
+}
+
+.table {
+    color: var(--gp-body-color);
+    background-color: var(--gp-card-bg);
+}
+
+.table thead th,
+.table tbody td {
+    border-color: var(--gp-card-border);
+}
+
+.form-control,
+.form-select,
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--gp-form-bg);
+    color: var(--gp-body-color);
+    border-color: var(--gp-form-border);
 }
 
 @media (max-width: 1024px) {
@@ -210,12 +271,13 @@ dl.row{
     left: 0;
     height: 100vh;
     width: 200px;
-    background-color: #1d1d1d;
-    color: #f8f9fa; /* text-light */
+    background-color: var(--gp-sidebar-bg);
+    color: var(--gp-sidebar-text);
     padding: 1rem;
     transition: all 0.3s ease;
     /*    z-index: 1000;*/
     overflow-y: auto;
+    border-right: 1px solid var(--gp-border-color);
 }
 
         /* Quando estiver fechada */
@@ -225,14 +287,14 @@ dl.row{
 
         /* Links da nav */
         #sidebar .nav-link {
-            color: #f8f9fa;
+            color: var(--gp-sidebar-text);
             padding: 10px;
             border-radius: 5px;
             transition: background 0.2s;
         }
 
             #sidebar .nav-link:hover {
-                background-color: rgba(255, 255, 255, 0.1);
+                background-color: var(--gp-sidebar-hover-bg);
             }
 
     /* �cone para abrir/fechar */
@@ -241,10 +303,9 @@ dl.row{
         top: 10px;
         right: 10px;
         background: transparent;
-        color: #f8f9fa;
+        color: var(--gp-sidebar-text);
         border: none;
         border-radius: 4px;
-        color: grey;
         cursor: pointer;
         width: 40px;
         height: 40px;
@@ -256,12 +317,12 @@ dl.row{
     }
 
         #toggle-sidebar:hover {
-            background: #343a40;
-            color: white;
+            background: var(--gp-sidebar-hover-bg);
+            color: var(--gp-sidebar-text);
         }
         
         #toggle-sidebar:active {
-            background: #495057;
+            background: var(--gp-sidebar-hover-bg);
         }
 
     /* �cone gira quando fecha */
@@ -288,7 +349,9 @@ dl.row{
 
     #navTop {
         z-index: 999;
-        display: none
+        display: none;
+        background: var(--gp-navtop-bg) !important;
+        border-bottom: 1px solid var(--gp-border-color);
     }
 
     @media (max-width: 1024px) {
@@ -350,4 +413,63 @@ dl.row{
             font-size: 0.75rem;
         }
     }
-    }
+}
+
+html.theme-dark,
+body.theme-dark {
+    color-scheme: dark;
+}
+
+html.theme-light,
+body.theme-light {
+    color-scheme: light;
+}
+
+html.theme-light {
+    --gp-body-bg: #f8f9fa;
+    --gp-body-color: #212529;
+    --gp-heading-color: #212529;
+    --gp-muted-color: #6c757d;
+    --gp-card-bg: #ffffff;
+    --gp-card-border: rgba(0, 0, 0, 0.08);
+    --gp-card-accent: #f1f3f5;
+    --gp-form-bg: #ffffff;
+    --gp-form-border: #ced4da;
+    --gp-sidebar-bg: #ffffff;
+    --gp-sidebar-text: #212529;
+    --gp-sidebar-hover-bg: rgba(0, 0, 0, 0.05);
+    --gp-navtop-bg: #ffffff;
+    --gp-navtop-link: #212529;
+    --gp-navtop-link-hover: #0d6efd;
+    --gp-border-color: rgba(0, 0, 0, 0.08);
+    --gp-toggle-bg: #ffffff;
+    --gp-toggle-border: #ced4da;
+    --gp-toggle-color: #212529;
+}
+
+#navTop .navbar-brand,
+#navTop .nav-link {
+    color: var(--gp-navtop-link) !important;
+}
+
+#navTop .nav-link:hover {
+    color: var(--gp-navtop-link-hover) !important;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1100;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.3s ease;
+    background-color: var(--gp-toggle-bg);
+    border-color: var(--gp-toggle-border);
+    color: var(--gp-toggle-color);
+}
+
+.theme-toggle:hover {
+    filter: brightness(1.05);
+}

@@ -4,8 +4,13 @@ using GerenciamentoProducao.Repositories;
 using GerenciamentoProducao.Services;
 using GerenciamentoProducaoo.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace GerenciamentoProducaoo.Controllers
 {
@@ -17,14 +22,23 @@ namespace GerenciamentoProducaoo.Controllers
         private readonly IObraRepository _obraRepository;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly GoogleCalendarService _calendarService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private static readonly string[] _extensoesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
+        private const long _tamanhoMaximoImagemBytes = 5 * 1024 * 1024; // 5MB
 
         
-        public ObraController(IObraRepository obraRepository, IUsuarioRepository usuarioRepository, GoogleCalendarService calendarService, IConfiguration configuration)
+        public ObraController(
+            IObraRepository obraRepository,
+            IUsuarioRepository usuarioRepository,
+            GoogleCalendarService calendarService,
+            IConfiguration configuration,
+            IWebHostEnvironment webHostEnvironment)
         {
             _obraRepository = obraRepository;
             _usuarioRepository = usuarioRepository;
             _calendarService = calendarService;
             _calendarId = configuration["Google:key"];
+            _webHostEnvironment = webHostEnvironment;
         }
         private async Task<ObraViewModel> CriarObraViewModel(ObraViewModel? model = null)
         {
@@ -53,6 +67,7 @@ namespace GerenciamentoProducaoo.Controllers
                 Observacoes = model?.Observacoes,
                 Finalizado = model?.Finalizado ?? false,
                 IdUsuario = model?.IdUsuario ?? 0,
+                ImagemObraPath = model?.ImagemObraPath,
                 
                 GoogleCalendarEventId = model?.GoogleCalendarEventId,
                 Usuario = usuarios.Select(t => new SelectListItem
@@ -106,6 +121,12 @@ namespace GerenciamentoProducaoo.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ObraViewModel viewModel)
         {
+            if (viewModel.ImagemUpload != null && viewModel.ImagemUpload.Length > 0 &&
+                !ValidarImagem(viewModel.ImagemUpload, out var erroImagemCreate))
+            {
+                ModelState.AddModelError(nameof(viewModel.ImagemUpload), erroImagemCreate!);
+            }
+
             if (!ModelState.IsValid)
             {
               var vm = await CriarObraViewModel(viewModel);
@@ -132,8 +153,15 @@ namespace GerenciamentoProducaoo.Controllers
                 DataConclusao = viewModel.DataConclusao,
                 Observacoes = viewModel.Observacoes,
                 Finalizado = viewModel.Finalizado,
-                IdUsuario = viewModel.IdUsuario
+                IdUsuario = viewModel.IdUsuario,
+                ImagemObraPath = viewModel.ImagemObraPath
             };
+
+            var imagemSalva = await SalvarImagemAsync(viewModel.ImagemUpload);
+            if (!string.IsNullOrEmpty(imagemSalva))
+            {
+                obra.ImagemObraPath = imagemSalva;
+            }
             
             // Criar evento no Google Calendar primeiro
             try
@@ -210,6 +238,7 @@ namespace GerenciamentoProducaoo.Controllers
                 Finalizado = item.Finalizado,
                 GoogleCalendarEventId = item.GoogleCalendarEventId,
                 IdUsuario = item.IdUsuario,
+                ImagemObraPath = item.ImagemObraPath,
                 Usuario = (await _usuarioRepository.GetAllAsync())
                     .Select(t => new SelectListItem
                     {
@@ -229,6 +258,12 @@ namespace GerenciamentoProducaoo.Controllers
         public async Task<IActionResult> Edit(int id, ObraViewModel viewModel)
         {
             if (id != viewModel.IdObra) return NotFound();
+
+            if (viewModel.ImagemUpload != null && viewModel.ImagemUpload.Length > 0 &&
+                !ValidarImagem(viewModel.ImagemUpload, out var erroImagemEdit))
+            {
+                ModelState.AddModelError(nameof(viewModel.ImagemUpload), erroImagemEdit!);
+            }
 
             if (!ModelState.IsValid)
             {
@@ -265,6 +300,20 @@ namespace GerenciamentoProducaoo.Controllers
             obra.DataConclusao = viewModel.DataConclusao;
             obra.Observacoes = viewModel.Observacoes;
             obra.IdUsuario = viewModel.IdUsuario;
+
+            if (viewModel.ImagemUpload != null && viewModel.ImagemUpload.Length > 0)
+            {
+                var imagemSalva = await SalvarImagemAsync(viewModel.ImagemUpload);
+                if (!string.IsNullOrEmpty(imagemSalva))
+                {
+                    RemoverImagemFisica(obra.ImagemObraPath);
+                    obra.ImagemObraPath = imagemSalva;
+                }
+            }
+            else
+            {
+                obra.ImagemObraPath = viewModel.ImagemObraPath;
+            }
 
             // Atualizar evento no Google Calendar (se existir)
             try
@@ -377,8 +426,73 @@ namespace GerenciamentoProducaoo.Controllers
                 TempData["SuccessMessage"] = "Obra deletada com sucesso!";
             }
 
+            RemoverImagemFisica(obra.ImagemObraPath);
+
             await _obraRepository.DeleteAsync(idObra);
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<string?> SalvarImagemAsync(IFormFile? arquivo)
+        {
+            if (arquivo == null || arquivo.Length == 0)
+            {
+                return null;
+            }
+
+            if (!ValidarImagem(arquivo, out _))
+            {
+                return null;
+            }
+
+            var pastaDestino = Path.Combine(_webHostEnvironment.WebRootPath, "img");
+            Directory.CreateDirectory(pastaDestino);
+
+            var extensao = Path.GetExtension(arquivo.FileName);
+            var nomeArquivo = $"obra_{Guid.NewGuid():N}{extensao}";
+            var caminhoCompleto = Path.Combine(pastaDestino, nomeArquivo);
+
+            using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
+            {
+                await arquivo.CopyToAsync(stream);
+            }
+
+            return Path.Combine("img", nomeArquivo).Replace("\\", "/");
+        }
+
+        private void RemoverImagemFisica(string? caminhoRelativo)
+        {
+            if (string.IsNullOrWhiteSpace(caminhoRelativo))
+            {
+                return;
+            }
+
+            var caminhoNormalizado = caminhoRelativo.Replace("/", Path.DirectorySeparatorChar.ToString());
+            var caminhoCompleto = Path.Combine(_webHostEnvironment.WebRootPath, caminhoNormalizado);
+
+            if (System.IO.File.Exists(caminhoCompleto))
+            {
+                System.IO.File.Delete(caminhoCompleto);
+            }
+        }
+
+        private bool ValidarImagem(IFormFile arquivo, out string? mensagemErro)
+        {
+            mensagemErro = null;
+
+            var extensao = Path.GetExtension(arquivo.FileName).ToLowerInvariant();
+            if (!_extensoesPermitidas.Contains(extensao))
+            {
+                mensagemErro = "Formato de imagem não suportado. Utilize JPG, JPEG, PNG, GIF, BMP ou WEBP.";
+                return false;
+            }
+
+            if (arquivo.Length > _tamanhoMaximoImagemBytes)
+            {
+                mensagemErro = "O arquivo excede o tamanho máximo permitido de 5 MB.";
+                return false;
+            }
+
+            return true;
         }
 
     }
