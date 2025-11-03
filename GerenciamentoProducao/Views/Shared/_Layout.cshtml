@@ -22,11 +22,10 @@
 
 </head>
 <body class="theme-dark">
-	<button id="themeToggle" type="button" class="btn btn-outline-light btn-sm theme-toggle">
-		<i class="fas fa-sun me-2"></i>
-		<span>Tema Claro</span>
-	</button>
-
+ <button type="button" class="btn btn-outline-light btn-sm theme-toggle d-flex align-items-center">
+                <i class="fas fa-sun me-2"></i>
+                <span>Tema Claro</span>
+            </button>
 	<!-- Navegação -->
 	@if (User.IsInRole("Administrador") || User.IsInRole("Gerente") || User.IsInRole("Outros"))
 	{
@@ -36,6 +35,13 @@
 				side_navigation
 			</span>
 		</button>
+
+		@* <div class="px-3 mt-3">
+			<button type="button" class="btn btn-outline-light btn-sm w-100 text-start theme-toggle">
+				<i class="fas fa-sun me-2"></i>
+				<span>Tema Claro</span>
+			</button>
+		</div> *@
 
 
 		<ul class="nav flex-column gap-2 mt-4" id="navLeft">
@@ -49,15 +55,13 @@
 			<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
 				<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
 				}
-                <li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
-                <li><a class="nav-link" asp-controller="Caixilho" asp-action="Liberacoes">🔓 Liberações</a></li>
-                <li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
-                <li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
+			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
+			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Liberacoes">🔓 Liberações</a></li>
+			<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
+			<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
 				}
-                <li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
-                <li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
-                <li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
-                <li><a class="nav-link" asp-controller="RelatorioProducao" asp-action="Index">📊 Relatórios</a></li>
+			<li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
+			<li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
                 <li><a class="nav-link" asp-controller="Calendar" asp-action="Index">📅 Calendário</a></li>
 			@if (User.Identity?.IsAuthenticated == true)
 			{
@@ -85,9 +89,8 @@
                 <li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
                 <li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
                 <li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
-                <li><a class="nav-link" asp-controller="Producao" asp-action="Index">🛠️ Produções</a></li>
                 <li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
-                <li><a class="nav-link" asp-controller="RelatorioProducao" asp-action="Index">📊 Relatórios</a></li>
+
 						@if (User.Identity?.IsAuthenticated == true)
 						{
 							<li class="mt-4">
@@ -115,33 +118,34 @@
 	@await RenderSectionAsync("Scripts", required: false)
 	<script>
 		(function () {
-			const toggleBtn = document.getElementById('themeToggle');
-			if (!toggleBtn) {
+			const toggleButtons = document.querySelectorAll('.theme-toggle');
+			if (!toggleButtons.length) {
 				return;
 			}
 
 			const root = document.documentElement;
-
 			const storedTheme = localStorage.getItem('theme-preference');
 			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 			const initialTheme = storedTheme ?? (prefersDark ? 'dark' : 'light');
 
 			applyTheme(initialTheme);
-			updateToggle(initialTheme === 'dark');
+			updateToggles(initialTheme === 'dark');
 
-			toggleBtn.addEventListener('click', () => {
-				const isDark = document.body.classList.contains('theme-dark');
-				const nextTheme = isDark ? 'light' : 'dark';
-				applyTheme(nextTheme);
-				localStorage.setItem('theme-preference', nextTheme);
-				updateToggle(nextTheme === 'dark');
+			toggleButtons.forEach(btn => {
+				btn.addEventListener('click', () => {
+					const isDark = document.body.classList.contains('theme-dark');
+					const nextTheme = isDark ? 'light' : 'dark';
+					applyTheme(nextTheme);
+					localStorage.setItem('theme-preference', nextTheme);
+					updateToggles(nextTheme === 'dark');
+				});
 			});
 
 			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
 				if (!localStorage.getItem('theme-preference')) {
 					const newTheme = event.matches ? 'dark' : 'light';
 					applyTheme(newTheme);
-					updateToggle(newTheme === 'dark');
+					updateToggles(newTheme === 'dark');
 				}
 			});
 
@@ -154,16 +158,18 @@
 				root.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
 			}
 
-			function updateToggle(isDark) {
-				if (isDark) {
-					toggleBtn.classList.add('btn-outline-light');
-					toggleBtn.classList.remove('btn-light');
-					toggleBtn.innerHTML = '<i class="fas fa-sun me-2"></i><span>Tema Claro</span>';
-				} else {
-					toggleBtn.classList.remove('btn-outline-light');
-					toggleBtn.classList.add('btn-light');
-					toggleBtn.innerHTML = '<i class="fas fa-moon me-2"></i><span>Tema Escuro</span>';
-				}
+			function updateToggles(isDark) {
+				toggleButtons.forEach(btn => {
+					if (isDark) {
+						btn.classList.add('btn-outline-light');
+						btn.classList.remove('btn-light');
+						btn.innerHTML = '<i class="fas fa-sun me-2"></i><span>Tema Claro</span>';
+					} else {
+						btn.classList.remove('btn-outline-light');
+						btn.classList.add('btn-light');
+						btn.innerHTML = '<i class="fas fa-moon me-2"></i><span>Tema Escuro</span>';
+					}
+				});
 			}
 		})();
 	</script>

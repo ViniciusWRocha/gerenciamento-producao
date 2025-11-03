@@ -1,32 +1,77 @@
 ﻿@model GerenciamentoProducao.Models.TipoCaixilho
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Tipo de Caixilho";
 }
 
-<h1 class="text-white">Edit</h1>
-
-<h4 class="text-white">TipoCaixilho</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdTipoCaixilho" />
-            <div class="form-group">
-                <label asp-for="DescricaoCaixilho" class="control-label"></label>
-                <input asp-for="DescricaoCaixilho" class="form-control" />
-                <span asp-validation-for="DescricaoCaixilho" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-white">Editar Tipo de Caixilho</h1>
+            <p class="text-white-50">Atualize as informações necessárias e salve as alterações.</p>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row g-4">
+        <div class="col-lg-7 col-xl-6">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dados do Tipo de Caixilho</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="IdTipoCaixilho" />
+
+                        <div class="mb-3">
+                            <label asp-for="DescricaoCaixilho" class="form-label">Descrição</label>
+                            <input asp-for="DescricaoCaixilho" class="form-control" placeholder="Ex.: Janela de correr" />
+                            <span asp-validation-for="DescricaoCaixilho" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5 col-xl-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dicas de preenchimento</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3 d-flex">
+                            <span class="badge bg-info me-3"><i class="fas fa-font"></i></span>
+                            <div>
+                                Utilize uma descrição objetiva que ajude a identificar o tipo de caixilho durante o cadastro de famílias e caixilhos.
+                            </div>
+                        </li>
+                        <li class="mb-3 d-flex">
+                            <span class="badge bg-success me-3"><i class="fas fa-check"></i></span>
+                            <div>
+                                Verifique se não existe outro cadastro com a mesma descrição para evitar duplicidades.
+                            </div>
+                        </li>
+                        <li class="d-flex">
+                            <span class="badge bg-warning text-dark me-3"><i class="fas fa-users-cog"></i></span>
+                            <div>
+                                Alterações serão refletidas nas telas que utilizam este tipo de caixilho imediatamente após salvar.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

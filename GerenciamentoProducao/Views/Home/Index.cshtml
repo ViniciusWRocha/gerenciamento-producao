@@ -14,25 +14,563 @@
 @*     <div>@ViewBag.Mensagem</div> *@
 @* } *@
 @* <div> home</div> *@
+@model GerenciamentoProducao.ViewModel.DashboardViewModel
 
 
 @{
-    ViewData["Title"] = "Importar Múltiplos XML";
+    ViewData["Title"] = "Home";
 }
 
-<h3>Importar Múltiplos XML</h3>
+<div class="container-fluid">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-6 col-12">
+            <h1 class="mb-0">📊 Dashboard</h1>
+            <p class="mb-0">Visão geral do sistema de gerenciamento de produção</p>
+        </div>
+        <div class="col-md-6 col-12 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0 gap-2 align-items-center">
+            <form asp-action="ImportarObras" enctype="multipart/form-data" method="post" class="d-flex align-items-center gap-2">
+                <input type="file" name="arquivosXml" accept=".xml" multiple class="form-control form-control-sm" />
+                <button type="submit" class="btn btn-primary btn-sm">Importar XML</button>
+            </form>
+           
+        </div>
+    </div>
+    @if (ViewBag.Resultados != null)
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <ul class="mb-0">
+                    @foreach (var resultado in (List<string>)ViewBag.Resultados)
+                    {
+                        <li>@resultado</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+</div>
+<div class="container-fluid">
 
-<form asp-action="ImportarObras" enctype="multipart/form-data" method="post">
-    <input type="file" name="arquivosXml" accept=".xml" multiple />
-    <button type="submit">Importar</button>
-</form>
+    <!-- Alertas -->
+    @if (Model.Alertas.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <h5 class="alert-heading">⚠️ Alertas do Sistema</h5>
+                    @foreach (var alerta in Model.Alertas)
+                    {
+                        <div class="alert alert-@alerta.Tipo alert-dismissible fade show mb-2" role="alert">
+                            <strong>@alerta.Icone @alerta.Titulo:</strong> @alerta.Mensagem
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
 
-@if (ViewBag.Resultados != null)
-{
-    <ul>
-        @foreach (var resultado in (List<string>)ViewBag.Resultados)
-        {
-            <li>@resultado</li>
+    <!-- Cards de Métricas -->
+    <div class="row mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Total de Obras</h6>
+                    <h4 class="text-primary">@Model.Metricas.TotalObras</h4>
+                    <small class="text-muted">Em Andamento: @Model.Metricas.ObrasEmAndamento</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Produções Concluídas</h6>
+                    <h4 class="text-success">@Model.Metricas.ProducoesConcluidas</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Produções Pendentes</h6>
+                    <h4 class="text-warning">@Model.Metricas.ProducoesPendentes</h4>
+                </div>
+            </div>
+        </div>
+
+        @* <div class="col-lg-3 col-md-6 col-sm-12 mb-3"> *@
+        @*     <div class="card"> *@
+        @*         <div class="card-body"> *@
+        @*             <h6 class="card-title">Total de Caixilhos</h6> *@
+        @*             <h4 class="text-info">@Model.Metricas.TotalCaixilhos</h4> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+    </div>
+
+    <!-- Segunda linha de métricas -->
+    <div class="row mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Produções Este Mês</h6>
+                    <h4 class="text-secondary">@Model.Metricas.ProducoesMesAtual</h4>
+                </div>
+            </div>
+        </div>
+
+        @* <div class="col-lg-3 col-md-6 col-sm-12 mb-3"> *@
+        @*     <div class="card"> *@
+        @*         <div class="card-body"> *@
+        @*             <h6 class="card-title">Usuários Ativos</h6> *@
+        @*             <h4 class="text-dark">@Model.Metricas.TotalUsuarios</h4> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Peso Total (kg)</h6>
+                    <h4 class="text-danger">@Model.Metricas.PesoTotalCaixilhos.ToString("F1")</h4>
+                </div>
+            </div>
+        </div>
+
+        @* <div class="col-lg-3 col-md-6 col-sm-12 mb-3"> *@
+        @*     <div class="card"> *@
+        @*         <div class="card-body"> *@
+        @*             <h6 class="card-title">Taxa de Conclusão</h6> *@
+        @*             <h4 class="text-primary"> *@
+        @*                 @{ *@
+        @*                     var taxaConclusao = Model.Metricas.TotalProducoes > 0  *@
+        @*                         ? (Model.Metricas.ProducoesConcluidas * 100.0 / Model.Metricas.TotalProducoes)  *@
+        @*                         : 0; *@
+        @*                 } *@
+        @*                 @taxaConclusao.ToString("F1")% *@
+        @*             </h4> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Peso Produzido (Mês)</h6>
+                    <h4 class="text-info">@Model.Metricas.PesoProduzidoMes.ToString("F1") t</h4>
+                    <small class="text-muted">Meta: 30.0 t</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terceira linha de métricas -->
+    <div class="row mb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Caixilhos Liberados</h6>
+                    <h4 class="text-success">@Model.Metricas.CaixilhosLiberados</h4>
+                    <small class="text-muted">Aguardando: @Model.Metricas.CaixilhosPendentesLiberacao</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Obras Atrasadas</h6>
+                    <h4 class="text-warning">@Model.Metricas.ObrasAtrasadas</h4>
+                    <small class="text-muted">Requer atenção</small>
+                </div>
+            </div>
+        </div>
+
+        @* <div class="col-lg-3 col-md-6 col-sm-12 mb-3"> *@
+        @*     <div class="card"> *@
+        @*         <div class="card-body"> *@
+        @*             <h6 class="card-title">Meta Mensal</h6> *@
+        @*             <h4 class="text-danger">0%</h4> *@
+        @*             <small class="text-muted">Meta: 30 toneladas</small> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-3">
+        <div class="col-lg-8 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Produção por Mês</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="producaoPorMesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Status das Obras</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie">
+                        <canvas id="statusObrasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabelas de Dados Recentes -->
+    <div class="row">
+        <div class="col-lg-6 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Produções Recentes</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Usuário</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var producao in Model.ProducoesRecentes)
+                                {
+                                    <tr>
+                                        <td>@producao.Nome</td>
+                                        <td>@producao.Data.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <span class="badge bg-@(producao.Status == "Concluída" ? "success" : "warning")">
+                                                @producao.Status
+                                            </span>
+                                        </td>
+                                        <td>@producao.Usuario</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title">Obras Recentes</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Construtora</th>
+                                    <th>Usuário</th>
+                                    <th>Data</th>
+                                    <th>Progresso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var obra in Model.ObrasRecentes)
+                                {
+                                    <tr>
+                                        <td>
+                                            @obra.Nome
+                                            <span class="badge bg-@(obra.Bandeira == "Verde" ? "success" : obra.Bandeira == "Amarela" ? "warning" : obra.Bandeira == "Vermelha" ? "danger" : "dark")">
+                                                @obra.Bandeira
+                                            </span>
+                                        </td>
+                                        <td>@obra.Construtora</td>
+                                        <td>@obra.Usuario</td>
+                                        <td>@obra.DataCriacao.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar bg-@(obra.PercentualConclusao >= 80 ? "success" : obra.PercentualConclusao >= 50 ? "warning" : "danger")"
+                                                     role="progressbar"
+                                                     style="width: @obra.PercentualConclusao%"
+                                                     aria-valuenow="@obra.PercentualConclusao"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100">
+                                                    @obra.PercentualConclusao.ToString("F1")%
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">
+                                                📦 @obra.PesoProduzido.ToString("F1") kg / 🎯 @obra.PesoFinal.ToString("F1") kg
+                                            </small>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Caixilhos para Liberação -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="card-title mb-0">Caixilhos Aguardando Liberação</h6>
+                    <a asp-controller="Caixilho" asp-action="Liberacoes" class="btn btn-primary btn-sm">
+                        <i class="fas fa-unlock"></i> Gerenciar Liberações
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Obra</th>
+                                    <th>Família</th>
+                                    <th>Peso (kg)</th>
+                                    <th>Data Término</th>
+                                    <th>Prioridade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="caixilhosLiberacaoTable">
+                                <!-- Dados carregados via AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Usuários -->
+    @* <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Top Usuários por Produção</h6>
+                </div> 
+                 <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Total Produções</th>
+                                    <th>Concluídas</th>
+                                    <th>Taxa de Conclusão</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topUsuariosTable">
+                                <!-- Dados carregados via AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+             </div>
+        </div>
+    </div> *@
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Gráfico de Produção por Mês
+        fetch('/Home/GetProducaoPorMes')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('producaoPorMesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.map(item => item.mes),
+                        datasets: [{
+                            label: 'Total Produções',
+                            data: data.map(item => item.total),
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.1
+                        }, {
+                            label: 'Concluídas',
+                            data: data.map(item => item.concluidas),
+                            borderColor: 'rgb(54, 162, 235)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            tension: 0.1
+                        }, {
+                            label: 'Peso (toneladas)',
+                            data: data.map(item => item.pesoProduzido),
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            tension: 0.1,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                beginAtZero: true
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                beginAtZero: true,
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                            }
+                        }
+                    }
+                });
+            });
+
+        // Gráfico de Status das Obras (Bandeiras)
+        fetch('/Home/GetStatusObras')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('statusObrasChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.map(item => item.status),
+                        datasets: [{
+                            data: data.map(item => item.quantidade),
+                            backgroundColor: [
+                                'rgba(40, 167, 69, 0.8)',   // Verde
+                                'rgba(255, 193, 7, 0.8)',   // Amarela
+                                'rgba(220, 53, 69, 0.8)',   // Vermelha
+                                'rgba(108, 117, 125, 0.8)'  // Crítica
+                            ],
+                            borderColor: [
+                                'rgba(40, 167, 69, 1)',
+                                'rgba(255, 193, 7, 1)',
+                                'rgba(220, 53, 69, 1)',
+                                'rgba(108, 117, 125, 1)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Obras por Bandeira de Prioridade'
+                            }
+                        }
+                    }
+                });
+            });
+
+        @* // Carregar Top Usuários
+        fetch('/Dashboard/GetTopUsuarios')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('topUsuariosTable');
+                tbody.innerHTML = data.map(usuario => `
+                    <tr>
+                        <td>${usuario.nome}</td>
+                        <td>${usuario.totalProducoes}</td>
+                        <td>${usuario.producoesConcluidas}</td>
+                        <td>${usuario.totalProducoes > 0 ? (usuario.producoesConcluidas * 100 / usuario.totalProducoes).toFixed(1) : 0}%</td>
+                    </tr>
+                `).join('');
+            }); *@
+
+        // Carregar caixilhos para liberação
+        fetch('/Home/GetCaixilhosParaLiberacao')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('caixilhosLiberacaoTable');
+                tbody.innerHTML = data.map(item => `
+                    <tr>
+                        <td>${item.nome}</td>
+                        <td>${item.obra}</td>
+                        <td>${item.familia}</td>
+                        <td>${item.peso.toFixed(2)}</td>
+                        <td>${new Date(item.dataTerminoObra).toLocaleDateString('pt-BR')}</td>
+                        <td>
+                            <span class="badge badge-${item.prioridade === 'Crítica' ? 'danger' : item.prioridade === 'Alta' ? 'warning' : 'success'}">
+                                ${item.prioridade}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-success btn-sm" onclick="liberarCaixilho(${item.id})">
+                                <i class="fas fa-check"></i> Liberar
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            });
+
+        function liberarCaixilho(id) {
+            if (confirm('Tem certeza que deseja liberar este caixilho?')) {
+                fetch(`/Caixilho/Liberar/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Erro ao liberar caixilho: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao liberar caixilho');
+                });
+            }
         }
-    </ul>
+
+        // Atualizar progresso das obras a cada 10 segundos
+        setInterval(async () => {
+            try {
+                const response = await fetch('/Home/AtualizarProgressoObras', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    }
+                });
+
+                if (response.ok) {
+                    // Recarregar apenas a seção de obras recentes
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar progresso:', error);
+            }
+        }, 10000);
+
+        // Atualizar dados completos a cada 30 segundos
+        setInterval(() => {
+            location.reload();
+        }, 30000);
+    </script>
 }

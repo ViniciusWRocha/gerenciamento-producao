@@ -287,6 +287,7 @@ public class UsuarioController : Controller
             Senha = model?.Senha,
             Telefone = model?.Telefone,
             IdTipoUsuario = model?.IdTipoUsuario ?? 0,
+            Ativo = model?.Ativo ?? true,
             TiposUsuario = tipos.Select(t => new SelectListItem
             {
                 Value = t.IdTipoUsuario.ToString(),
