@@ -34,8 +34,12 @@
 
 
 		<ul class="nav flex-column gap-2 mt-4" id="navLeft">
-				@if (User.IsInRole("Administrador") || User.IsInRole("Gerente")){
+			@* <li class="d-flex align-items-center gap-2"> *@
+			@* 	<img src="@Url.Content("~/" + Model.ImagemObraPath)"  class="img-fluid" style="width: 20px; height: 20px;"> *@
+			@* 	<span>@User.Identity.Name</span> *@
+			@* </li> *@
 			<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
+				@if (User.IsInRole("Administrador") || User.IsInRole("Gerente")){
 
 				@if (User.IsInRole("Administrador") ){
 
@@ -86,7 +90,7 @@
 							<li class="d-lg-none">
 								<button type="button" class="btn btn-outline-light btn-sm w-100 text-start theme-toggle">
 									<i class="fas fa-sun me-2"></i>
-									<span>Tema Claro</span>
+									<span>Claro</span>
 								</button>
 							</li>
 							<li class="mt-4">
@@ -159,11 +163,11 @@
 					if (isDark) {
 						btn.classList.add('btn-outline-light');
 						btn.classList.remove('btn-light');
-						btn.innerHTML = '<i class="fas fa-sun me-2"></i><span>Tema Claro</span>';
+						btn.innerHTML = '<i class="fas fa-sun me-2"></i><span>Claro</span>';
 					} else {
 						btn.classList.remove('btn-outline-light');
 						btn.classList.add('btn-light');
-						btn.innerHTML = '<i class="fas fa-moon me-2"></i><span>Tema Escuro</span>';
+						btn.innerHTML = '<i class="fas fa-moon me-2"></i><span>Escuro</span>';
 					}
 				});
 			}

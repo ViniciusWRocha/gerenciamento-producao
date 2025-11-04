@@ -1,4 +1,4 @@
-﻿using GerenciamentoProducao.Models;
+using GerenciamentoProducao.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 

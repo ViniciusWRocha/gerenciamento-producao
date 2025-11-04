@@ -16,12 +16,17 @@ public class UsuarioController : Controller
 {
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ITipoUsuarioRepository _tipoUsuarioRepository;
+    private readonly IWebHostEnvironment _webHostEnvironment;
+    private static readonly string[] _extensoesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
+    private const long _tamanhoMaximoImagemBytes = 5 * 1024 * 1024; // 5MB
 
     public UsuarioController(IUsuarioRepository usuarioRepository,
-            ITipoUsuarioRepository tipoUsuarioRepository)
+            ITipoUsuarioRepository tipoUsuarioRepository,
+            IWebHostEnvironment webHostEnvironment)
     {
         _usuarioRepository = usuarioRepository;
         _tipoUsuarioRepository = tipoUsuarioRepository;
+        _webHostEnvironment = webHostEnvironment;
     }
 
 
@@ -47,7 +52,7 @@ public class UsuarioController : Controller
 
         // Busca usuário com role incluída
         var usuario = await _usuarioRepository.ValidarLoginAsync(email, senha);
-       
+
 
         if (usuario == null || !usuario.Ativo)
         {
@@ -164,7 +169,7 @@ public class UsuarioController : Controller
             NomeUsuario = usuario.NomeUsuario,
             Email = usuario.Email,
             Senha = usuario.Senha,
-            Telefone=usuario.Telefone,
+            Telefone = usuario.Telefone,
             IdTipoUsuario = usuario.IdTipoUsuario,
             TiposUsuario = (await _tipoUsuarioRepository.GetAllAsync()).Select(t => new SelectListItem
             {
@@ -274,7 +279,7 @@ public class UsuarioController : Controller
         return RedirectToAction(nameof(Inativos));
     }
 
-    
+
     // -------- Apoio --------
     private async Task<UsuarioViewModel> CriarUsuarioViewModel(UsuarioViewModel? model = null)
     {
@@ -298,13 +303,75 @@ public class UsuarioController : Controller
 
     private static string NormalizeRole(string? raw)
     {
-        var r =  (raw ?? string.Empty).Trim().ToLowerInvariant();
+        var r = (raw ?? string.Empty).Trim().ToLowerInvariant();
         return r switch
         {
             "administrador" or "admin" => "Administrador",
             "gerente" or "maneger" => "Gerente",
             _ => "Outros"
         };
+    }
+    private async Task<string?> SalvarImagemAsync(IFormFile? arquivo)
+    {
+        if (arquivo == null || arquivo.Length == 0)
+        {
+            return null;
+        }
+
+        if (!ValidarImagem(arquivo, out _))
+        {
+            return null;
+        }
+
+        var pastaDestino = Path.Combine(_webHostEnvironment.WebRootPath, "img");
+        Directory.CreateDirectory(pastaDestino);
+
+        var extensao = Path.GetExtension(arquivo.FileName);
+        var nomeArquivo = $"obra_{Guid.NewGuid():N}{extensao}";
+        var caminhoCompleto = Path.Combine(pastaDestino, nomeArquivo);
+
+        using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
+        {
+            await arquivo.CopyToAsync(stream);
+        }
+
+        return Path.Combine("img", nomeArquivo).Replace("\\", "/");
+    }
+
+    private void RemoverImagemFisica(string? caminhoRelativo)
+    {
+        if (string.IsNullOrWhiteSpace(caminhoRelativo))
+        {
+            return;
+        }
+
+        var caminhoNormalizado = caminhoRelativo.Replace("/", Path.DirectorySeparatorChar.ToString());
+        var caminhoCompleto = Path.Combine(_webHostEnvironment.WebRootPath, caminhoNormalizado);
+
+        if (System.IO.File.Exists(caminhoCompleto))
+        {
+            System.IO.File.Delete(caminhoCompleto);
+        }
+    }
+
+    private bool ValidarImagem(IFormFile arquivo, out string? mensagemErro)
+    {
+        mensagemErro = null;
+
+        var extensao = Path.GetExtension(arquivo.FileName).ToLowerInvariant();
+        if (!_extensoesPermitidas.Contains(extensao))
+        {
+            mensagemErro = "Formato de imagem não suportado. Utilize JPG, JPEG, PNG, GIF, BMP ou WEBP.";
+            return false;
+        }
+
+        if (arquivo.Length > _tamanhoMaximoImagemBytes)
+        {
+            mensagemErro = "O arquivo excede o tamanho máximo permitido de 5 MB.";
+            return false;
+        }
+
+        return true;
     }
 
 
