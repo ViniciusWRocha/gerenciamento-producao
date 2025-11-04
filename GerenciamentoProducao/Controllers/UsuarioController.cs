@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using GerenciamentoProducao.Interfaces;
 using GerenciamentoProducao.Models;
 using GerenciamentoProducao.Repositories;
@@ -373,6 +373,5 @@ public class UsuarioController : Controller
 
         return true;
     }
-
 
 }
