@@ -93,8 +93,9 @@
         <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title">Produções Pendentes</h6>
-                    <h4 class="text-warning">@Model.Metricas.ProducoesPendentes</h4>
+                    <h6 class="card-title">Aguardando Liberação</h6>
+                    <h4 class="text-warning">@Model.Metricas.CaixilhosPendentesLiberacao</h4>
+                    <small class="text-muted">Caixilhos pendentes</small>
                 </div>
             </div>
         </div>
@@ -219,8 +220,34 @@
                     <h6 class="card-title">Status das Obras</h6>
                 </div>
                 <div class="card-body">
-                    <div class="chart-pie">
-                        <canvas id="statusObrasChart"></canvas>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="card border-success">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-success mb-2">Obras Feitas</h6>
+                                    <h3 class="text-success mb-0">@Model.Metricas.ObrasFeitas</h3>
+                                    <small class="text-muted">Concluídas</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-warning mb-2">Obras Pendentes</h6>
+                                    <h3 class="text-warning mb-0">@Model.Metricas.ObrasPendentes</h3>
+                                    <small class="text-muted">Em andamento</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-danger">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-danger mb-2">Obras Atrasadas</h6>
+                                    <h3 class="text-danger mb-0">@Model.Metricas.ObrasAtrasadas</h3>
+                                    <small class="text-muted">Requer atenção</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -440,47 +467,6 @@
                 });
             });
 
-        // Gráfico de Status das Obras (Bandeiras)
-        fetch('/Home/GetStatusObras')
-            .then(response => response.json())
-            .then(data => {
-                const ctx = document.getElementById('statusObrasChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: data.map(item => item.status),
-                        datasets: [{
-                            data: data.map(item => item.quantidade),
-                            backgroundColor: [
-                                'rgba(40, 167, 69, 0.8)',   // Verde
-                                'rgba(255, 193, 7, 0.8)',   // Amarela
-                                'rgba(220, 53, 69, 0.8)',   // Vermelha
-                                'rgba(108, 117, 125, 0.8)'  // Crítica
-                            ],
-                            borderColor: [
-                                'rgba(40, 167, 69, 1)',
-                                'rgba(255, 193, 7, 1)',
-                                'rgba(220, 53, 69, 1)',
-                                'rgba(108, 117, 125, 1)'
-                            ],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                            },
-                            title: {
-                                display: true,
-                                text: 'Obras por Bandeira de Prioridade'
-                            }
-                        }
-                    }
-                });
-            });
 
         @* // Carregar Top Usuários
         fetch('/Dashboard/GetTopUsuarios')

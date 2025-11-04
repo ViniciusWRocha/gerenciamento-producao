@@ -22,10 +22,6 @@
 
 </head>
 <body class="theme-dark">
- <button type="button" class="btn btn-outline-light btn-sm theme-toggle d-flex align-items-center">
-                <i class="fas fa-sun me-2"></i>
-                <span>Tema Claro</span>
-            </button>
 	<!-- Navegação -->
 	@if (User.IsInRole("Administrador") || User.IsInRole("Gerente") || User.IsInRole("Outros"))
 	{
@@ -36,17 +32,8 @@
 			</span>
 		</button>
 
-		@* <div class="px-3 mt-3">
-			<button type="button" class="btn btn-outline-light btn-sm w-100 text-start theme-toggle">
-				<i class="fas fa-sun me-2"></i>
-				<span>Tema Claro</span>
-			</button>
-		</div> *@
-
 
 		<ul class="nav flex-column gap-2 mt-4" id="navLeft">
-				
-			<li><a class="nav-link" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
 				@if (User.IsInRole("Administrador") || User.IsInRole("Gerente")){
 			<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
 
@@ -55,16 +42,21 @@
 			<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
 				<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
 				}
-			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
-			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Liberacoes">🔓 Liberações</a></li>
+			<li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
 			<li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
 			<li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
+			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Index">🪟 Caixilho</a></li>
+			<li><a class="nav-link" asp-controller="Caixilho" asp-action="Liberacoes">🔓 Liberações</a></li>
 				}
-			<li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
-			<li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
                 <li><a class="nav-link" asp-controller="Calendar" asp-action="Index">📅 Calendário</a></li>
 			@if (User.Identity?.IsAuthenticated == true)
 			{
+					<div class="px-3 mt-3 d-none d-lg-block">
+						<button type="button" class="btn btn-outline-light btn-sm w-100 text-start theme-toggle">
+							<i class="fas fa-sun me-2"></i>
+							<span>Tema Claro</span>
+						</button>
+					</div>
 				<li class="mt-4">
 					<a class="nav-link text-danger" asp-controller="Usuario" asp-action="Logout">🚪 Sair</a>
 				</li>
@@ -80,7 +72,6 @@
 				</button>
 				<div id="menu" class="collapse navbar-collapse">
 					<ul class="navbar-nav ms-auto">
-						<li><a class="nav-link" asp-controller="Dashboard" asp-action="Index">📊 Dashboard</a></li>
 						<li><a class="nav-link" asp-controller="Home" asp-action="Index">🏠 Início</a></li>
 						<li><a class="nav-link" asp-controller="Usuario" asp-action="Index">👥 Usuários</a></li>
 						<li><a class="nav-link" asp-controller="Usuario" asp-action="Inativos">⛔ Inativos</a></li>
@@ -89,10 +80,15 @@
                 <li><a class="nav-link" asp-controller="TipoCaixilho" asp-action="Index">🔠 Tipos de Caixilhos</a></li>
                 <li><a class="nav-link" asp-controller="FamiliaCaixilho" asp-action="Index">📦 Família de Caixilho</a></li>
                 <li><a class="nav-link" asp-controller="Obra" asp-action="Index">🏗️ Obras</a></li>
-                <li><a class="nav-link" asp-controller="MetaMensal" asp-action="Index">🎯 Metas Mensais</a></li>
 
 						@if (User.Identity?.IsAuthenticated == true)
 						{
+							<li class="d-lg-none">
+								<button type="button" class="btn btn-outline-light btn-sm w-100 text-start theme-toggle">
+									<i class="fas fa-sun me-2"></i>
+									<span>Tema Claro</span>
+								</button>
+							</li>
 							<li class="mt-4">
 								<a class="nav-link text-danger" asp-controller="Usuario" asp-action="Logout">🚪 Sair</a>
 							</li>

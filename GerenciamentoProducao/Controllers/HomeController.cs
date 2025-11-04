@@ -100,6 +100,26 @@ namespace GerenciamentoProducao.Controllers
         {
             var resultados = new List<string>();
 
+            // Verificar se o usuário está autenticado
+            if (!User?.Identity?.IsAuthenticated == true)
+            {
+                resultados.Add("Usuário não autenticado.");
+                ViewBag.Resultados = resultados;
+                return await Index();
+            }
+
+            // Buscar o usuário logado pelo email
+            var emailUsuario = User.Identity.Name ?? User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var usuarioLogado = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Email == emailUsuario && u.Ativo);
+
+            if (usuarioLogado == null)
+            {
+                resultados.Add("Usuário não encontrado ou inativo.");
+                ViewBag.Resultados = resultados;
+                return await Index();
+            }
+
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
             if (arquivosXml == null || arquivosXml.Count == 0)
@@ -122,16 +142,17 @@ namespace GerenciamentoProducao.Controllers
                     var enderecoObra = dadosObra?.Element("ENDERECO_OBRA");
                     var dadosCliente = xdoc.Root.Element("DADOS_CLIENTE");
 
+                    // Criar apenas a obra, sem criar caixilhos ou outras entidades
                     var obra = new Obra
                     {
-                        Nome = dadosObra?.Element("NOME")?.Value,
-                        Construtora = dadosCliente?.Element("NOME")?.Value,
-                        Cnpj = dadosCliente?.Element("CNPJ_CPF")?.Value,
-                        Logradouro = enderecoObra?.Element("END_LOGR")?.Value,
-                        Nro = enderecoObra?.Element("END_NUMERO")?.Value,
-                        Bairro = enderecoObra?.Element("END_BAIRRO")?.Value,
-                        Cep = enderecoObra?.Element("END_CEP")?.Value,
-                        Uf = enderecoObra?.Element("END_UF")?.Value,
+                        Nome = dadosObra?.Element("NOME")?.Value ?? "Obra sem nome",
+                        Construtora = dadosCliente?.Element("NOME")?.Value ?? "Sem construtora",
+                        Cnpj = dadosCliente?.Element("CNPJ_CPF")?.Value ?? "00000000000000",
+                        Logradouro = enderecoObra?.Element("END_LOGR")?.Value ?? "Não informado",
+                        Nro = enderecoObra?.Element("END_NUMERO")?.Value ?? "0",
+                        Bairro = enderecoObra?.Element("END_BAIRRO")?.Value ?? "Não informado",
+                        Cep = enderecoObra?.Element("END_CEP")?.Value ?? "00000-000",
+                        Uf = enderecoObra?.Element("END_UF")?.Value ?? "SP",
                         IdUsuario = 3 // Defina conforme sua l�gica de usu�rio
                     };
 
@@ -156,13 +177,6 @@ namespace GerenciamentoProducao.Controllers
         public async Task<IActionResult> GetProducaoPorMes()
         {
             var data = await ObterProducaoPorMes();
-            return Json(data);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetStatusObras()
-        {
-            var data = await ObterStatusObras();
             return Json(data);
         }
 
@@ -219,7 +233,13 @@ namespace GerenciamentoProducao.Controllers
             var pesoTotalCaixilhos = await _context.Caixilhos
                 .SumAsync(c => c.PesoUnitario * c.Quantidade);
 
-            var pesoProduzidoMes = 0.0f;
+            // Peso produzido no mês atual - baseado em caixilhos liberados (em toneladas)
+            var pesoProduzidoMes = await _context.Caixilhos
+                .Where(c => c.Liberado && 
+                           c.DataLiberacao.HasValue &&
+                           c.DataLiberacao.Value.Month == DateTime.Now.Month &&
+                           c.DataLiberacao.Value.Year == DateTime.Now.Year)
+                .SumAsync(c => c.PesoUnitario * c.Quantidade) / 1000.0f;
             var caixilhosLiberados = await _context.Caixilhos
                 .Where(c => c.Liberado)
                 .CountAsync();
@@ -236,6 +256,14 @@ namespace GerenciamentoProducao.Controllers
                 .Where(o => o.DataTermino < DateTime.Now && o.StatusObra != "Concluída")
                 .CountAsync();
 
+            var obrasFeitas = await _context.Obras
+                .Where(o => o.StatusObra == "Concluída")
+                .CountAsync();
+
+            var obrasPendentes = await _context.Obras
+                .Where(o => o.StatusObra != "Concluída" && o.DataTermino >= DateTime.Now)
+                .CountAsync();
+
             return new MetricasViewModel
             {
                 TotalObras = totalObras,
@@ -250,7 +278,9 @@ namespace GerenciamentoProducao.Controllers
                 CaixilhosLiberados = caixilhosLiberados,
                 CaixilhosPendentesLiberacao = caixilhosPendentesLiberacao,
                 ObrasEmAndamento = obrasEmAndamento,
-                ObrasAtrasadas = obrasAtrasadas
+                ObrasAtrasadas = obrasAtrasadas,
+                ObrasFeitas = obrasFeitas,
+                ObrasPendentes = obrasPendentes
             };
         }
 
@@ -346,28 +376,6 @@ namespace GerenciamentoProducao.Controllers
                 });
             }
 
-            var metaAtual = await _context.MetasMensais
-                .Where(m => m.Ano == DateTime.Now.Year && m.Mes == DateTime.Now.Month)
-                .FirstOrDefaultAsync();
-
-            if (metaAtual != null)
-            {
-                var diasRestantes = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day;
-                var pesoRestante = metaAtual.MetaPesoKg - metaAtual.PesoProduzido;
-                var pesoNecessarioPorDia = diasRestantes > 0 ? pesoRestante / diasRestantes : pesoRestante;
-
-                if (pesoNecessarioPorDia > 2.0f)
-                {
-                    alertas.Add(new AlertaViewModel
-                    {
-                        Tipo = "warning",
-                        Titulo = "Meta Mensal em Risco",
-                        Mensagem = $"Necessário produzir {pesoNecessarioPorDia:F1} toneladas/dia para atingir a meta",
-                        Icone = "📊"
-                    });
-                }
-            }
-
             return alertas;
         }
 
@@ -393,12 +401,13 @@ namespace GerenciamentoProducao.Controllers
                                p.Produzido)
                     .CountAsync();
 
+                // Peso produzido no mês - baseado em caixilhos liberados (em toneladas)
                 var pesoProduzido = await _context.Caixilhos
-                    .Where(c => c.StatusProducao == "Concluído" &&
+                    .Where(c => c.Liberado &&
                                c.DataLiberacao.HasValue &&
                                c.DataLiberacao.Value.Month == mes.Month &&
                                c.DataLiberacao.Value.Year == mes.Year)
-                    .SumAsync(c => c.PesoUnitario * c.Quantidade);
+                    .SumAsync(c => c.PesoUnitario * c.Quantidade) / 1000.0f;
 
                 producoesPorMes.Add(new ProducaoPorMesViewModel
                 {
@@ -411,33 +420,6 @@ namespace GerenciamentoProducao.Controllers
             }
 
             return producoesPorMes;
-        }
-
-        private async Task<List<StatusObraViewModel>> ObterStatusObras()
-        {
-            var obrasVerde = await _context.Obras
-                .Where(o => o.Bandeira == "Verde")
-                .CountAsync();
-
-            var obrasAmarela = await _context.Obras
-                .Where(o => o.Bandeira == "Amarela")
-                .CountAsync();
-
-            var obrasVermelha = await _context.Obras
-                .Where(o => o.Bandeira == "Vermelha")
-                .CountAsync();
-
-            var obrasCritica = await _context.Obras
-                .Where(o => o.Bandeira == "Crítica")
-                .CountAsync();
-
-            return new List<StatusObraViewModel>
-            {
-                new StatusObraViewModel { Status = "Verde", Quantidade = obrasVerde },
-                new StatusObraViewModel { Status = "Amarela", Quantidade = obrasAmarela },
-                new StatusObraViewModel { Status = "Vermelha", Quantidade = obrasVermelha },
-                new StatusObraViewModel { Status = "Crítica", Quantidade = obrasCritica }
-            };
         }
 
         private async Task AtualizarPesoProduzidoObras()

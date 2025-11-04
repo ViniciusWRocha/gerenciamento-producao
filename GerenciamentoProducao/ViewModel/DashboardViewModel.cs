@@ -8,7 +8,6 @@ namespace GerenciamentoProducao.ViewModel
         public List<ProducaoRecenteViewModel> ProducoesRecentes { get; set; } = new();
         public List<ObraRecenteViewModel> ObrasRecentes { get; set; } = new();
         public List<AlertaViewModel> Alertas { get; set; } = new();
-        public MetaMensalViewModel? MetaMensal { get; set; }
     }
 
     public class MetricasViewModel
@@ -28,6 +27,8 @@ namespace GerenciamentoProducao.ViewModel
         public int CaixilhosPendentesLiberacao { get; set; }
         public int ObrasEmAndamento { get; set; }
         public int ObrasAtrasadas { get; set; }
+        public int ObrasFeitas { get; set; }
+        public int ObrasPendentes { get; set; }
     }
 
     public class ProducaoRecenteViewModel
@@ -82,15 +83,6 @@ namespace GerenciamentoProducao.ViewModel
         public string Nome { get; set; } = string.Empty;
         public int TotalProducoes { get; set; }
         public int ProducoesConcluidas { get; set; }
-    }
-
-    public class MetaMensalViewModel
-    {
-        public float MetaPeso { get; set; }
-        public float PesoProduzido { get; set; }
-        public float PercentualAtingido { get; set; }
-        public int DiasRestantes { get; set; }
-        public bool MetaAtingida { get; set; }
     }
 
     public class ObraPorBandeiraViewModel

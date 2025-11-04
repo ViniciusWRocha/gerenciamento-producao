@@ -81,13 +81,6 @@ namespace GerenciamentoProducao.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMetaMensal()
-        {
-            var metaMensal = await ObterMetaMensal();
-            return Json(metaMensal);
-        }
-
-        [HttpGet]
         public async Task<IActionResult> GetObrasPorBandeira()
         {
             var obrasPorBandeira = await ObterObrasPorBandeira();
@@ -148,8 +141,13 @@ namespace GerenciamentoProducao.Controllers
             var pesoTotalCaixilhos = await _context.Caixilhos
                 .SumAsync(c => c.PesoUnitario * c.Quantidade);
 
-            // Novas métricas específicas para esquadrias
-            var pesoProduzidoMes = 0.0f; // Simplificado temporariamente
+            // Peso produzido no mês atual - baseado em caixilhos liberados (em toneladas)
+            var pesoProduzidoMes = await _context.Caixilhos
+                .Where(c => c.Liberado && 
+                           c.DataLiberacao.HasValue &&
+                           c.DataLiberacao.Value.Month == DateTime.Now.Month &&
+                           c.DataLiberacao.Value.Year == DateTime.Now.Year)
+                .SumAsync(c => c.PesoUnitario * c.Quantidade) / 1000.0f;
             var caixilhosLiberados = await _context.Caixilhos
                 .Where(c => c.Liberado)
                 .CountAsync();
@@ -279,29 +277,6 @@ namespace GerenciamentoProducao.Controllers
                 });
             }
 
-            // Meta mensal em risco
-            var metaAtual = await _context.MetasMensais
-                .Where(m => m.Ano == DateTime.Now.Year && m.Mes == DateTime.Now.Month)
-                .FirstOrDefaultAsync();
-
-            if (metaAtual != null)
-            {
-                var diasRestantes = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day;
-                var pesoRestante = metaAtual.MetaPesoKg - metaAtual.PesoProduzido;
-                var pesoNecessarioPorDia = diasRestantes > 0 ? pesoRestante / diasRestantes : pesoRestante;
-
-                if (pesoNecessarioPorDia > 2.0f) // Mais de 2 toneladas por dia
-                {
-                    alertas.Add(new AlertaViewModel
-                    {
-                        Tipo = "warning",
-                        Titulo = "Meta Mensal em Risco",
-                        Mensagem = $"Necessário produzir {pesoNecessarioPorDia:F1} toneladas/dia para atingir a meta",
-                        Icone = "📊"
-                    });
-                }
-            }
-
             return alertas;
         }
 
@@ -327,14 +302,15 @@ namespace GerenciamentoProducao.Controllers
                                p.Produzido)
                     .CountAsync();
 
-                // Peso produzido no mês
+                // Peso produzido no mês - baseado em caixilhos liberados (em toneladas)
                 var pesoProduzido = await _context.Caixilhos
-                    .Where(c => c.StatusProducao == "Concluído" && 
+                    .Where(c => c.Liberado && 
                                c.DataLiberacao.HasValue &&
                                c.DataLiberacao.Value.Month == mes.Month &&
                                c.DataLiberacao.Value.Year == mes.Year)
-                    .SumAsync(c => c.PesoUnitario * c.Quantidade);
+                    .SumAsync(c => c.PesoUnitario * c.Quantidade) / 1000.0f;
 
+           
                 producoesPorMes.Add(new ProducaoPorMesViewModel
                 {
                     Mes = mes.ToString("MMM/yyyy"),
@@ -390,37 +366,6 @@ namespace GerenciamentoProducao.Controllers
                 .OrderByDescending(u => u.TotalProducoes)
                 .Take(5)
                 .ToListAsync();
-        }
-
-        private async Task<MetaMensalViewModel> ObterMetaMensal()
-        {
-            var metaAtual = await _context.MetasMensais
-                .Where(m => m.Ano == DateTime.Now.Year && m.Mes == DateTime.Now.Month)
-                .FirstOrDefaultAsync();
-
-            if (metaAtual == null)
-            {
-                // Criar meta padrão se não existir
-                metaAtual = new MetaMensal
-                {
-                    Ano = DateTime.Now.Year,
-                    Mes = DateTime.Now.Month,
-                    MetaPesoKg = 30000.0f, // 30 toneladas em kg
-                    PesoProduzido = 0,
-                    IdUsuario = 1 // Usuário padrão
-                };
-                _context.MetasMensais.Add(metaAtual);
-                await _context.SaveChangesAsync();
-            }
-
-            return new MetaMensalViewModel
-            {
-                MetaPeso = metaAtual.MetaPesoKg,
-                PesoProduzido = metaAtual.PesoProduzido,
-                PercentualAtingido = metaAtual.PercentualAtingido,
-                DiasRestantes = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day,
-                MetaAtingida = metaAtual.MetaAtingida
-            };
         }
 
         private async Task<List<ObraPorBandeiraViewModel>> ObterObrasPorBandeira()

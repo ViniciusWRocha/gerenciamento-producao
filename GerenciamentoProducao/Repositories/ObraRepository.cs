@@ -48,8 +48,9 @@ namespace GerenciamentoProducao.Repositories
 
         public async Task<Obra> GetById(int id)
         {
-            return await _context.Obras.FindAsync(id);
-
+            return await _context.Obras
+                .Include(o => o.Usuario)
+                .FirstOrDefaultAsync(o => o.IdObra == id);
         }
 
         public async Task UpdateAsync(Obra obra)

@@ -266,6 +266,7 @@ dl.row{
     }
 }
 #sidebar {
+    overflow-y:hidden;
     position: fixed;
     top: 0;
     left: 0;
@@ -457,10 +458,6 @@ html.theme-light {
 }
 
 .theme-toggle {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1100;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -472,4 +469,26 @@ html.theme-light {
 
 .theme-toggle:hover {
     filter: brightness(1.05);
+}
+
+/* Estilo para o botão de tema no menu hambúrguer (mobile) */
+#menu .theme-toggle {
+    width: 100%;
+    text-align: left;
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+}
+
+#menu li.d-lg-none {
+    padding: 0;
+}
+
+#menu li.d-lg-none .theme-toggle {
+    border: none;
+    background: transparent;
+    color: inherit;
+}
+
+#menu li.d-lg-none .theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }

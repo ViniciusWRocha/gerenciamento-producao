@@ -28,9 +28,6 @@ namespace GerenciamentoProducao.Data
         //models Liberacao
         public DbSet<FamiliaCaixilho> FamCaixilhos { get; set; }
 
-        //models MetaMensal
-        public DbSet<MetaMensal> MetasMensais { get; set; }
-
         //models RelatorioProducao
         public DbSet<RelatorioProducao> RelatoriosProducao { get; set; }
 
