@@ -41,7 +41,18 @@ namespace GerenciamentoProducao.Repositories
 
         public async Task UpdateAsync(FamiliaCaixilho familiaCaixilho)
         {
-            _context.FamCaixilhos.Update(familiaCaixilho);
+            // Buscar a entidade rastreada do contexto
+            var familiaTracked = await _context.FamCaixilhos.FindAsync(familiaCaixilho.IdFamiliaCaixilho);
+            if (familiaTracked == null)
+            {
+                throw new InvalidOperationException($"FamiliaCaixilho com ID {familiaCaixilho.IdFamiliaCaixilho} não encontrado.");
+            }
+
+            // Atualizar as propriedades da entidade rastreada
+            familiaTracked.DescricaoFamilia = familiaCaixilho.DescricaoFamilia;
+            // Não atualizar PesoTotal aqui, pois é calculado automaticamente
+            // familiaTracked.PesoTotal = familiaCaixilho.PesoTotal;
+
             await _context.SaveChangesAsync();
         }
 

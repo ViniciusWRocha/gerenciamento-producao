@@ -54,7 +54,7 @@ namespace GerenciamentoProducao.Controllers
             return View(familia);
         }
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, FamiliaCaixilho familia)
         {
             if (id != familia.IdFamiliaCaixilho)

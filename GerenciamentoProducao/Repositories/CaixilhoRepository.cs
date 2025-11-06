@@ -57,12 +57,32 @@ namespace GerenciamentoProducao.Repositories
 
         public async Task UpdateAsync(Caixilho caixilho)
         {
-            // Buscar o caixilho original para verificar se mudou de família
+            // Buscar o caixilho original do contexto para verificar se mudou de família
             var caixilhoOriginal = await _context.Caixilhos.AsNoTracking().FirstOrDefaultAsync(c => c.IdCaixilho == caixilho.IdCaixilho);
             var familiaAnterior = caixilhoOriginal?.IdFamiliaCaixilho;
             var familiaAtual = caixilho.IdFamiliaCaixilho;
 
-            _context.Caixilhos.Update(caixilho);
+            // Buscar a entidade rastreada do contexto
+            var caixilhoTracked = await _context.Caixilhos.FindAsync(caixilho.IdCaixilho);
+            if (caixilhoTracked == null)
+            {
+                throw new InvalidOperationException($"Caixilho com ID {caixilho.IdCaixilho} não encontrado.");
+            }
+
+            // Atualizar as propriedades da entidade rastreada
+            caixilhoTracked.NomeCaixilho = caixilho.NomeCaixilho;
+            caixilhoTracked.Largura = caixilho.Largura;
+            caixilhoTracked.Altura = caixilho.Altura;
+            caixilhoTracked.Quantidade = caixilho.Quantidade;
+            caixilhoTracked.PesoUnitario = caixilho.PesoUnitario;
+            caixilhoTracked.ObraId = caixilho.ObraId;
+            caixilhoTracked.IdFamiliaCaixilho = caixilho.IdFamiliaCaixilho;
+            caixilhoTracked.IdTipoCaixilho = caixilho.IdTipoCaixilho;
+            caixilhoTracked.Liberado = caixilho.Liberado;
+            caixilhoTracked.DataLiberacao = caixilho.DataLiberacao;
+            caixilhoTracked.StatusProducao = caixilho.StatusProducao;
+            caixilhoTracked.Observacoes = caixilho.Observacoes;
+
             await _context.SaveChangesAsync();
             
             // Recalcular o peso da família atual

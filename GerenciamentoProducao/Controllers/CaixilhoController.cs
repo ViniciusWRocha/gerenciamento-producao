@@ -26,6 +26,12 @@ namespace GerenciamentoProducaoo.Controllers
             var tipoCaixilhos = await _tipoCaixilhoRepository.GetAllAsync();
             var familiaCaixilhos = await _familiaCaixilhoRepository.GetAllAsync();
             var obras = await _obraRepository.GetAllAsync();
+            
+            // Determinar os valores corretos para os IDs
+            int obraId = model?.ObraId ?? 0;
+            int familiaId = model?.IdFamiliaCaixilho > 0 ? model.IdFamiliaCaixilho : (model?.FamiliaCaixilhoId ?? 0);
+            int tipoId = model?.IdTipoCaixilho > 0 ? model.IdTipoCaixilho : (model?.TipoCaixilhoId ?? 0);
+            
             return new CaixilhoViewModel
             {
                 IdCaixilho = model?.IdCaixilho ?? 0,
@@ -34,24 +40,35 @@ namespace GerenciamentoProducaoo.Controllers
                 Altura = model?.Altura ?? 0,
                 Quantidade = model?.Quantidade ?? 0,
                 PesoUnitario = model?.PesoUnitario ?? 0,
-                ObraId = model?.ObraId ?? 0,
-                IdFamiliaCaixilho = model?.FamiliaCaixilhoId ?? 0,
-                IdTipoCaixilho = model?.TipoCaixilhoId ?? 0,
+                ObraId = obraId,
+                // Preencher ambas as propriedades para compatibilidade
+                FamiliaCaixilhoId = familiaId,
+                IdFamiliaCaixilho = familiaId,
+                TipoCaixilhoId = tipoId,
+                IdTipoCaixilho = tipoId,
+                // Campos adicionais
+                Liberado = model?.Liberado ?? false,
+                DataLiberacao = model?.DataLiberacao,
+                StatusProducao = model?.StatusProducao ?? "Pendente",
+                Observacoes = model?.Observacoes,
                 //Dropdrowns 
                 Obra = obras.Select(o => new SelectListItem
                 {
                     Value = o.IdObra.ToString(),
-                    Text = o.Nome
+                    Text = o.Nome,
+                    Selected = o.IdObra == obraId
                 }),
                 FamiliaCaixilho = familiaCaixilhos.Select(f => new SelectListItem
                 {
                     Value = f.IdFamiliaCaixilho.ToString(),
-                    Text = f.DescricaoFamilia
+                    Text = f.DescricaoFamilia,
+                    Selected = f.IdFamiliaCaixilho == familiaId
                 }),
                 TipoCaixilho = tipoCaixilhos.Select(t => new SelectListItem
                 {
                     Value = t.IdTipoCaixilho.ToString(),
-                    Text = t.DescricaoCaixilho
+                    Text = t.DescricaoCaixilho,
+                    Selected = t.IdTipoCaixilho == tipoId
                 })
             };
         }
@@ -72,7 +89,66 @@ namespace GerenciamentoProducaoo.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CaixilhoViewModel caixilhoViewModel)
         {
-            if (!ModelState.IsValid)
+            // Validar se os IDs de chave estrangeira existem
+            if (caixilhoViewModel.IdFamiliaCaixilho > 0)
+            {
+                var familiaExiste = await _familiaCaixilhoRepository.GetByIdAsync(caixilhoViewModel.IdFamiliaCaixilho);
+                if (familiaExiste == null)
+                {
+                    ModelState.AddModelError("IdFamiliaCaixilho", "A família de caixilho selecionada não existe.");
+                }
+            }
+            else
+            {
+                // Tentar usar FamiliaCaixilhoId como fallback
+                if (caixilhoViewModel.FamiliaCaixilhoId > 0)
+                {
+                    var familiaExiste = await _familiaCaixilhoRepository.GetByIdAsync(caixilhoViewModel.FamiliaCaixilhoId);
+                    if (familiaExiste == null)
+                    {
+                        ModelState.AddModelError("IdFamiliaCaixilho", "A família de caixilho selecionada não existe.");
+                    }
+                    else
+                    {
+                        caixilhoViewModel.IdFamiliaCaixilho = caixilhoViewModel.FamiliaCaixilhoId;
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("IdFamiliaCaixilho", "É necessário selecionar uma família de caixilho.");
+                }
+            }
+            
+            if (caixilhoViewModel.IdTipoCaixilho > 0)
+            {
+                var tipoExiste = await _tipoCaixilhoRepository.GetById(caixilhoViewModel.IdTipoCaixilho);
+                if (tipoExiste == null)
+                {
+                    ModelState.AddModelError("IdTipoCaixilho", "O tipo de caixilho selecionado não existe.");
+                }
+            }
+            else
+            {
+                // Tentar usar TipoCaixilhoId como fallback
+                if (caixilhoViewModel.TipoCaixilhoId > 0)
+                {
+                    var tipoExiste = await _tipoCaixilhoRepository.GetById(caixilhoViewModel.TipoCaixilhoId);
+                    if (tipoExiste == null)
+                    {
+                        ModelState.AddModelError("IdTipoCaixilho", "O tipo de caixilho selecionado não existe.");
+                    }
+                    else
+                    {
+                        caixilhoViewModel.IdTipoCaixilho = caixilhoViewModel.TipoCaixilhoId;
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("IdTipoCaixilho", "É necessário selecionar um tipo de caixilho.");
+                }
+            }
+            
+            if (ModelState.IsValid)
             {
                 // Mapear ViewModel para Model
                 var caixilho = new Caixilho
@@ -83,8 +159,8 @@ namespace GerenciamentoProducaoo.Controllers
                     Quantidade = caixilhoViewModel.Quantidade,
                     PesoUnitario = caixilhoViewModel.PesoUnitario,
                     ObraId = caixilhoViewModel.ObraId,
-                    IdFamiliaCaixilho = caixilhoViewModel.FamiliaCaixilhoId,
-                    IdTipoCaixilho = caixilhoViewModel.TipoCaixilhoId
+                    IdFamiliaCaixilho = caixilhoViewModel.IdFamiliaCaixilho,
+                    IdTipoCaixilho = caixilhoViewModel.IdTipoCaixilho
                 };
                 await _caixilhoRepository.AddAsync(caixilho);
                 return RedirectToAction(nameof(Index));
@@ -112,23 +188,35 @@ namespace GerenciamentoProducaoo.Controllers
                 PesoUnitario = caixilho.PesoUnitario,
 
                 ObraId = caixilho.ObraId,
+                // Preencher ambas as propriedades para compatibilidade
                 FamiliaCaixilhoId = caixilho.IdFamiliaCaixilho,
+                IdFamiliaCaixilho = caixilho.IdFamiliaCaixilho,
                 TipoCaixilhoId = caixilho.IdTipoCaixilho,
-                //Dropdrowns 
+                IdTipoCaixilho = caixilho.IdTipoCaixilho,
+                
+                // Campos adicionais
+                Liberado = caixilho.Liberado,
+                DataLiberacao = caixilho.DataLiberacao,
+                StatusProducao = caixilho.StatusProducao,
+                Observacoes = caixilho.Observacoes,
+                
                 Obra = obras.Select(o => new SelectListItem
                 {
                     Value = o.IdObra.ToString(),
-                    Text = o.Nome
+                    Text = o.Nome,
+                    Selected = o.IdObra == caixilho.ObraId
                 }),
                 FamiliaCaixilho = familiaCaixilhos.Select(f => new SelectListItem
                 {
                     Value = f.IdFamiliaCaixilho.ToString(),
-                    Text = f.DescricaoFamilia
+                    Text = f.DescricaoFamilia,
+                    Selected = f.IdFamiliaCaixilho == caixilho.IdFamiliaCaixilho
                 }),
                 TipoCaixilho = tipoCaixilhos.Select(t => new SelectListItem
                 {
                     Value = t.IdTipoCaixilho.ToString(),
-                    Text = t.DescricaoCaixilho
+                    Text = t.DescricaoCaixilho,
+                    Selected = t.IdTipoCaixilho == caixilho.IdTipoCaixilho
                 })
             };
             return View(model);
@@ -141,28 +229,68 @@ namespace GerenciamentoProducaoo.Controllers
             {
                 return NotFound();
             }
-            if (!ModelState.IsValid) {
+            
+            // Remover erros de validação dos objetos de navegação (não são necessários)
+            ModelState.Remove("Obra");
+            ModelState.Remove("FamiliaCaixilho");
+            ModelState.Remove("TipoCaixilho");
+            
+            // Validar se os IDs de chave estrangeira são válidos
+            if (viewModel.ObraId <= 0)
+            {
+                ModelState.AddModelError("ObraId", "É necessário selecionar uma obra.");
+            }
+            
+            if (viewModel.IdFamiliaCaixilho <= 0)
+            {
+                // Tentar usar FamiliaCaixilhoId como fallback
+                if (viewModel.FamiliaCaixilhoId > 0)
+                {
+                    viewModel.IdFamiliaCaixilho = viewModel.FamiliaCaixilhoId;
+                }
+                else
+                {
+                    ModelState.AddModelError("IdFamiliaCaixilho", "É necessário selecionar uma família de caixilho.");
+                }
+            }
+            
+            if (viewModel.IdTipoCaixilho <= 0)
+            {
+                // Tentar usar TipoCaixilhoId como fallback
+                if (viewModel.TipoCaixilhoId > 0)
+                {
+                    viewModel.IdTipoCaixilho = viewModel.TipoCaixilhoId;
+                }
+                else
+                {
+                    ModelState.AddModelError("IdTipoCaixilho", "É necessário selecionar um tipo de caixilho.");
+                }
+            }
+            
+            if (ModelState.IsValid) {
                 var caixilho = await _caixilhoRepository.GetById(id);
                 if (caixilho == null) { return NotFound(); }
+                
+                // Atualizar todas as propriedades
                 caixilho.NomeCaixilho = viewModel.NomeCaixilho;
                 caixilho.Largura = viewModel.Largura;
                 caixilho.Altura = viewModel.Altura;
                 caixilho.Quantidade = viewModel.Quantidade;
                 caixilho.PesoUnitario = viewModel.PesoUnitario;
                 caixilho.ObraId = viewModel.ObraId;
-                caixilho.IdFamiliaCaixilho = viewModel.FamiliaCaixilhoId;
-                caixilho.IdTipoCaixilho = viewModel.TipoCaixilhoId;
+                caixilho.IdFamiliaCaixilho = viewModel.IdFamiliaCaixilho;
+                caixilho.IdTipoCaixilho = viewModel.IdTipoCaixilho;
+                caixilho.Liberado = viewModel.Liberado;
+                caixilho.DataLiberacao = viewModel.DataLiberacao;
+                caixilho.StatusProducao = viewModel.StatusProducao;
+                caixilho.Observacoes = viewModel.Observacoes;
+                
                 await _caixilhoRepository.UpdateAsync(caixilho);
                 return RedirectToAction(nameof(Index));
             }
-            //Se o modelo não estiver válido, recarrega o formulário
-            // podemos trocar para outra coisa invés disso
             viewModel = await CriarCaixilhoViewModel(viewModel);
             return View(viewModel);
         }
-
-
-        // GET: Caixilho/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

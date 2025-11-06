@@ -19,8 +19,8 @@
                     <h6 class="m-0 font-weight-bold text-primary">Dados do Caixilho</h6>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Edit">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form asp-action="Edit" asp-route-id="@Model.IdCaixilho" method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
                         <input type="hidden" asp-for="IdCaixilho" />
 
                         <div class="row">
@@ -67,6 +67,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label asp-for="ObraId" class="control-label">Obra</label>
+                                    <select asp-for="ObraId" class="form-control" asp-items="Model.Obra"></select>
+                                    <span asp-validation-for="ObraId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            @* <div class="col-md-6">
+                                <div class="form-group">
                                     <label asp-for="StatusProducao" class="control-label">Status de Produção</label>
                                     <select asp-for="StatusProducao" class="form-control">
                                         <option value="Pendente">Pendente</option>
@@ -76,17 +83,11 @@
                                     </select>
                                     <span asp-validation-for="StatusProducao" class="text-danger"></span>
                                 </div>
-                            </div>
+                            </div> *@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="ObraId" class="control-label">Obra</label>
-                                    <select asp-for="ObraId" class="form-control" asp-items="Model.Obra"></select>
-                                    <span asp-validation-for="ObraId" class="text-danger"></span>
-                                </div>
-                            </div>
+                           
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label asp-for="IdFamiliaCaixilho" class="control-label">Família de Caixilho</label>
@@ -102,7 +103,7 @@
                             <span asp-validation-for="IdTipoCaixilho" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group">
+                        @* <div class="form-group">s
                             <div class="form-check">
                                 <input asp-for="Liberado" class="form-check-input" type="checkbox" />
                                 <label asp-for="Liberado" class="form-check-label">
@@ -110,7 +111,7 @@
                                 </label>
                             </div>
                             <small class="form-text text-muted">Marque se o caixilho está liberado para produção</small>
-                        </div>
+                        </div> *@
 
                         <div class="form-group">
                             <label asp-for="Observacoes" class="control-label">Observações</label>

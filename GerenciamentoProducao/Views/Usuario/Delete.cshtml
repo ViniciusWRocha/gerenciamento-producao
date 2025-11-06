@@ -30,20 +30,20 @@
 
                     <dl class="row mb-0">
                         <dt class="col-sm-4 text-muted">Nome</dt>
-                        <dd class="col-sm-8 fw-semibold">@Model.NomeUsuario</dd>
+                        <dd class="col-sm-8 text-muted">@Model.NomeUsuario</dd>
 
                         <dt class="col-sm-4 text-muted">Email</dt>
-                        <dd class="col-sm-8"><a href="mailto:@Model.Email" class="text-decoration-none">@Model.Email</a></dd>
+                        <dd class="col-sm-8"><a href="mailto:@Model.Email" class="text-decoration-none text-muted">@Model.Email</a></dd>
 
                         <dt class="col-sm-4 text-muted">Telefone</dt>
-                        <dd class="col-sm-8">@(!string.IsNullOrWhiteSpace(Model.Telefone) ? Model.Telefone : "Não informado")</dd>
+                        <dd class="col-sm-8  text-muted">@(!string.IsNullOrWhiteSpace(Model.Telefone) ? Model.Telefone : "Não informado")</dd>
 
                         <dt class="col-sm-4 text-muted">Senha</dt>
-                        <dd class="col-sm-8"><span class="badge bg-dark">@senhaMascarada</span></dd>
+                        <dd class="col-sm-8"><span class="badge text-muted">@senhaMascarada</span></dd>
 
                         <dt class="col-sm-4 text-muted">Status</dt>
                         <dd class="col-sm-8">
-                            <span class="badge badge-@(Model.Ativo ? "success" : "danger")">
+                            <span class="badge  text-muted">
                                 @(Model.Ativo ? "Ativo" : "Inativo")
                             </span>
                         </dd>

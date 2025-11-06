@@ -40,9 +40,18 @@ namespace GerenciamentoProducao.Repositories
 
         }
 
-        public async  Task UpdateAsync(TipoCaixilho tipoCaixilho)
+        public async Task UpdateAsync(TipoCaixilho tipoCaixilho)
         {
-            _context.TipoCaixilhos.Update(tipoCaixilho);
+            // Buscar a entidade rastreada do contexto
+            var tipoCaixilhoTracked = await _context.TipoCaixilhos.FindAsync(tipoCaixilho.IdTipoCaixilho);
+            if (tipoCaixilhoTracked == null)
+            {
+                throw new InvalidOperationException($"TipoCaixilho com ID {tipoCaixilho.IdTipoCaixilho} não encontrado.");
+            }
+
+            // Atualizar as propriedades da entidade rastreada
+            tipoCaixilhoTracked.DescricaoCaixilho = tipoCaixilho.DescricaoCaixilho;
+
             await _context.SaveChangesAsync();
         }
     }

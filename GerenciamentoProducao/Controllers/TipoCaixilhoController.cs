@@ -35,7 +35,7 @@ namespace GerenciamentoProducaoo.Controllers
             return View(tipoCaixilho);
         }
 
-        [HttpGet]
+        //[HttpGet]
         [Authorize(Roles = "Administrador,Gerente")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -44,8 +44,8 @@ namespace GerenciamentoProducaoo.Controllers
             return View(tipoCaixilho);
         }
 
-        [HttpPut]
-        //[ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TipoCaixilho tipoCaixilho)
         {
             if (id != tipoCaixilho.IdTipoCaixilho)
